@@ -951,3 +951,57 @@ function strip_gpc($values, $type = 'g') {
 	}
 	return $values;
 }
+
+function curl($url, $method = 0, $data = '', $isThrowException = false, $headers = [], $connectTimeout = 5, $timeout = 5) {
+    $ch = curl_init($url);
+    curl_setopt ($ch, CURLOPT_HEADER, 0);
+    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $connectTimeout);
+    curl_setopt ($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_REFERER, $url);
+    curl_setopt ($ch, CURLOPT_HTTPHEADER , $headers);
+    curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt ($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+
+    if ( $method == 1 ) {
+        curl_setopt ($ch, CURLOPT_POST, true);
+        curl_setopt ($ch, CURLOPT_POSTFIELDS, is_array($data) ? http_build_query($data) : $data );
+    } else if ( $method == 2 ) {
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt ($ch, CURLOPT_POSTFIELDS, $data );
+    }
+
+    $t = microtime(true);
+    $ret = curl_exec($ch);
+    $d = microtime(true) - $t;
+
+    if ($ret === false) {
+        $error = curl_error($ch);
+        $info =  curl_getinfo($ch);
+        $error_msg = 'Util curl error: ' . var_export($error, true) . ' , time spent is ' . $d . ', info is ' . var_export($info, true) . ' ,param is :' . var_export(func_get_args(), true);
+        if ($isThrowException) {
+            throw new \Exception($error_msg);
+        }
+    }
+
+    curl_close ($ch);
+    return $ret;
+}
+
+function wxHttpsRequest2($url, $data = NULL)
+{
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+
+    if (!empty($data)) {
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    }
+
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $output = curl_exec($curl);
+    curl_close($curl);
+    return $output;
+}

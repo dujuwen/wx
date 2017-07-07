@@ -651,6 +651,8 @@ abstract class WeModuleProcessor extends WeBase {
 	
 	public $rule;
 
+	public static $repeatInfo = array();
+
 	public function __construct(){
 		global $_W;
 		
@@ -698,7 +700,11 @@ abstract class WeModuleProcessor extends WeBase {
 	}
 	
 	abstract function respond();
-	
+
+	public static function getResponds() {
+	    return self::$repeatInfo;
+	}
+
 	protected function respText($content) {
 		if (empty($content)) {
 			return error(-1, 'Invaild value');

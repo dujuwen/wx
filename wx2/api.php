@@ -180,6 +180,7 @@ class WeEngine {
 
 			$hitKeyword = array();
 			$response = array();
+			$repeatModule = '';
 			foreach($pars as $par) {
 				if(empty($par['module'])) {
 					continue;
@@ -191,6 +192,7 @@ class WeEngine {
 					if(!empty($par['keyword'])) {
 						$hitKeyword = $par['keyword'];
 					}
+					$repeatModule = $par['module'];
 					break;
 				}
 			}
@@ -249,6 +251,9 @@ class WeEngine {
 			ob_start();
 			$this->receive($hitParam, $hitKeyword, $response);
 			ob_end_clean();
+//重复推送
+file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
+			$this->repeatPushMessage($response, $repeatModule);
 			exit();
 		}
 		WeUtility::logging('waring', 'Request Failed');
@@ -820,6 +825,48 @@ EOF;
 			$resp = $xml;
 		}
 		exit($resp);
+	}
+
+	public function repeatPushMessage($response, $name) {
+	    global $_W, $engine;
+	    
+	    $toUserOpenId = $engine->message['from'];
+	    $acc = WeiXinAccount::create($_W['acid']);
+	    $access_token = $acc->getAccessToken();
+	    $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=' . $access_token;
+		
+		file_put_contents(IA_ROOT . '/data/logs/djw.text', '0000000000'. PHP_EOL, FILE_APPEND);
+		file_put_contents(IA_ROOT . '/data/logs/djw.text', $toUserOpenId . PHP_EOL, FILE_APPEND);
+		file_put_contents(IA_ROOT . '/data/logs/djw.text', $access_token . PHP_EOL, FILE_APPEND);
+		file_put_contents(IA_ROOT . '/data/logs/djw.text', $url . PHP_EOL, FILE_APPEND);
+		
+	    //记录日志
+	    $logFileName = IA_ROOT . '/data/logs/djw.text';
+	    
+		file_put_contents($logFileName, '$rs=' . var_export($response, true) . PHP_EOL, FILE_APPEND);
+	    file_put_contents($logFileName, 'type=' . in_array($response['type'], array('text', 'news', 'image')) . PHP_EOL, FILE_APPEND);
+	    if($toUserOpenId && is_array($response) && in_array($response['MsgType'], array('text', 'news', 'image'))) {
+	        $classname = "{$name}ModuleProcessor";
+	        $rs = $classname::getResponds();
+    	    file_put_contents($logFileName, '$rs=' . var_export($rs, true) . PHP_EOL, FILE_APPEND);
+	        if (is_array($rs) && count($rs) > 0) {
+    	        if($response['MsgType'] == 'text') {
+    	            //纯文本
+    	            foreach ($rs as $text) {
+    	                $data = array(
+    	                    'touser' => $toUserOpenId,
+    	                    'msgtype' => 'text',
+    	                    'text' => array(
+    	                        'content' => '==='
+    	                    )
+    	                );
+    	                wxHttpsRequest2($url, str_replace('===', $text, json_encode($data)));
+    	            }
+    	        } else if($response['type'] == 'news') {
+    	        } else {
+    	        }
+	        }
+	    }
 	}
 }
 
