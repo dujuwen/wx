@@ -840,6 +840,7 @@ EOF;
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
 
+	        file_put_contents(IA_ROOT . '/data/logs/'. $name .'.log', 'xxxx');
     	    infoLog('djw_test', $classname);
     	    infoLog('djw_test', $rs);
 
