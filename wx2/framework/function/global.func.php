@@ -1005,3 +1005,7 @@ function wxHttpsRequest2($url, $data = NULL)
     curl_close($curl);
     return $output;
 }
+
+function infoLog($name, $data, $isAppend = true) {
+    file_put_contents(IA_ROOT . '/data/logs/'. $name .'.log', var_export($data, true) . PHP_EOL, $isAppend ? FILE_APPEND : null);
+}

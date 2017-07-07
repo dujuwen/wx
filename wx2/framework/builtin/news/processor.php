@@ -9,7 +9,7 @@ class NewsModuleProcessor extends WeModuleProcessor {
 		$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = -1 ORDER BY displayorder DESC, id ASC LIMIT 8";
 		$commends = pdo_fetchall($sql, array(':id' => $rid));
 		if (empty($commends)) {
-						$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 ORDER BY RAND()";
+			$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 ORDER BY RAND()";
 			$main = pdo_fetch($sql, array(':id' => $rid));
 			if(empty($main['id'])) {
 				return false;

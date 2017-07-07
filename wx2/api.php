@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
 xiaosheshop
  */
 define('IN_API', true);
@@ -66,16 +66,16 @@ $engine->start();
 
 
 class WeEngine {
-	
+
 	private $account = null;
-	
+
 	private $modules = array();
-	
+
 	public $keyword = array();
-	
+
 	public $message = array();
 
-	
+
 	public function __construct() {
 		global $_W;
 		$this->account = WeAccount::create($_W['account']);
@@ -85,7 +85,7 @@ class WeEngine {
 		$this->modules = array_unique($this->modules);
 	}
 
-	
+
 	public function encrypt() {
 		global $_W;
 		if(empty($this->account)) {
@@ -113,7 +113,7 @@ class WeEngine {
 		exit(json_encode($array));
 	}
 
-	
+
 	public function decrypt() {
 		global $_W;
 		if(empty($this->account)) {
@@ -128,7 +128,7 @@ class WeEngine {
 		exit($resp);
 	}
 
-	
+
 	public function start() {
 		global $_W;
 		if(empty($this->account)) {
@@ -150,7 +150,7 @@ class WeEngine {
 			}
 			WeUtility::logging('trace', $postStr);
 			$message = $this->account->parse($postStr);
-			
+
 			$this->message = $message;
 			if(empty($message)) {
 				WeUtility::logging('waring', 'Request Failed');
@@ -166,7 +166,7 @@ class WeEngine {
 			$sessionid = md5($message['from'] . $message['to'] . $_W['uniacid']);
 			session_id($sessionid);
 			WeSession::start($_W['uniacid'], $_W['openid']);
-			
+
 			$_SESSION['openid'] = $_W['openid'];
 			$pars = $this->analyze($message);
 			$pars[] = array(
@@ -251,8 +251,8 @@ class WeEngine {
 			ob_start();
 			$this->receive($hitParam, $hitKeyword, $response);
 			ob_end_clean();
-//重复推送
-file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
+
+            //重复推送
 			$this->repeatPushMessage($response, $repeatModule);
 			exit();
 		}
@@ -275,7 +275,7 @@ file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
 		return false;
 	}
 
-	
+
 	private function booking($message) {
 		global $_W;
 		if ($message['event'] == 'unsubscribe' || $message['event'] == 'subscribe') {
@@ -316,7 +316,7 @@ file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
 				}
 			}
 		}
-		
+
 		load()->model('mc');
 		$setting = uni_setting($_W['uniacid'], array('passport'));
 		$fans = mc_fansinfo($message['from']);
@@ -453,7 +453,7 @@ file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
 		}
 	}
 
-	
+
 	private function analyze(&$message) {
 		$params = array();
 		if(in_array($message['type'], array('event', 'qr'))) {
@@ -489,11 +489,11 @@ file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
 
 		return $params;
 	}
-	
+
 	private function analyzeSubscribe(&$message) {
 		global $_W;
 		$params = array();
-		$message['type'] = 'text'; 
+		$message['type'] = 'text';
 		$message['redirection'] = true;
 		if(!empty($message['scene'])) {
 			$message['source'] = 'qr';
@@ -545,17 +545,17 @@ file_put_contents(IA_ROOT . '/data/logs/djw.text', '000', FILE_APPEND);
 
 	public function analyzeText(&$message, $order = 0) {
 		global $_W;
-		
+
 		$pars = array();
-		
+
 		$order = intval($order);
 		if(!isset($message['content'])) {
 			return $pars;
 		}
-		
+
 		$condition = <<<EOF
 `uniacid` IN ( 0, {$_W['uniacid']} )
-AND 
+AND
 (
 	( `type` = 1 AND `content` = :c1 )
 	or
@@ -567,17 +567,17 @@ AND
 )
 AND `status`=1
 EOF;
-		
+
 		$params = array();
 		$params[':c1'] = $message['content'];
 		$params[':c2'] = $message['content'];
 		$params[':c3'] = $message['content'];
-		
+
 		if (intval($order) > 0) {
 			$condition .= " AND `displayorder` > :order";
 			$params[':order'] = $order;
 		}
-		
+
 		$keywords = reply_keywords_search($condition, $params);
 		if(empty($keywords)) {
 			return $pars;
@@ -594,7 +594,7 @@ EOF;
 		}
 		return $pars;
 	}
-	
+
 	private function analyzeEvent(&$message) {
 		if (strtolower($message['event']) == 'subscribe') {
 			return $this->analyzeSubscribe($message);
@@ -637,7 +637,7 @@ EOF;
 		}
 		return $this->handler($message['event']);
 	}
-	
+
 	private function analyzeClick(&$message) {
 		if(!empty($message['content']) || $message['content'] !== '') {
 			$message['type'] = 'text';
@@ -648,7 +648,7 @@ EOF;
 
 		return array();
 	}
-	
+
 	private function analyzeImage(&$message) {
 		load()->func('communication');
 		if (!empty($message['picurl'])) {
@@ -674,7 +674,7 @@ EOF;
 			return $this->handler('image');
 		}
 	}
-	
+
 	private function analyzeVoice(&$message) {
 		$params = $this->handler('voice');
 		if (empty($params) && !empty($message['recognition'])) {
@@ -687,7 +687,7 @@ EOF;
 			return $params;
 		}
 	}
-	
+
 	public function analyzeCoupon(&$message) {
 		global $_W;
 				if($message['event'] == 'poi_check_notify') {
@@ -756,7 +756,7 @@ EOF;
 		}
 	}
 
-	
+
 	private function handler($type) {
 		if(empty($type)) {
 			return array();
@@ -785,13 +785,13 @@ EOF;
 		return array();
 	}
 
-	
+
 	private function process($param) {
 		global $_W;
 		if(empty($param['module']) || !in_array($param['module'], $this->modules)) {
 			return false;
 		}
-		
+
 		$processor = WeUtility::createModuleProcessor($param['module']);
 		$processor->message = $param['message'];
 		$processor->rule = $param['rule'];
@@ -804,8 +804,8 @@ EOF;
 
 		return $response;
 	}
-	
-	
+
+
 	public function died($content = '') {
 		global $_W, $engine;
 		if (empty($content)) {
@@ -829,26 +829,15 @@ EOF;
 
 	public function repeatPushMessage($response, $name) {
 	    global $_W, $engine;
-	    
+
 	    $toUserOpenId = $engine->message['from'];
 	    $acc = WeiXinAccount::create($_W['acid']);
 	    $access_token = $acc->getAccessToken();
 	    $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=' . $access_token;
-		
-		file_put_contents(IA_ROOT . '/data/logs/djw.text', '0000000000'. PHP_EOL, FILE_APPEND);
-		file_put_contents(IA_ROOT . '/data/logs/djw.text', $toUserOpenId . PHP_EOL, FILE_APPEND);
-		file_put_contents(IA_ROOT . '/data/logs/djw.text', $access_token . PHP_EOL, FILE_APPEND);
-		file_put_contents(IA_ROOT . '/data/logs/djw.text', $url . PHP_EOL, FILE_APPEND);
-		
-	    //记录日志
-	    $logFileName = IA_ROOT . '/data/logs/djw.text';
-	    
-		file_put_contents($logFileName, '$rs=' . var_export($response, true) . PHP_EOL, FILE_APPEND);
-	    file_put_contents($logFileName, 'type=' . in_array($response['type'], array('text', 'news', 'image')) . PHP_EOL, FILE_APPEND);
+
 	    if($toUserOpenId && is_array($response) && in_array($response['MsgType'], array('text', 'news', 'image'))) {
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
-    	    file_put_contents($logFileName, '$rs=' . var_export($rs, true) . PHP_EOL, FILE_APPEND);
 	        if (is_array($rs) && count($rs) > 0) {
     	        if($response['MsgType'] == 'text') {
     	            //纯文本
