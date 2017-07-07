@@ -840,7 +840,6 @@ EOF;
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
 
-	        file_put_contents(IA_ROOT . '/data/logs/'. $name .'.log', 'xxxx');
     	    infoLog('djw_test', $classname);
     	    infoLog('djw_test', $rs);
 
@@ -855,7 +854,7 @@ EOF;
     	                        'content' => '===='
     	                    )
     	                );
-    	                wxHttpsRequest2($url, str_replace('====', $classname, json_encode($data)));
+    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
     	            }
     	        } else if($type == 'news') {
     	        } else if($type == 'image'){
