@@ -835,24 +835,36 @@ EOF;
 	    $access_token = $acc->getAccessToken();
 	    $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=' . $access_token;
 
-	    if($toUserOpenId && is_array($response) && in_array($response['MsgType'], array('text', 'news', 'image'))) {
+	    $type = isset($response['MsgType']) ? $response['MsgType'] : '';
+	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
 	        if (is_array($rs) && count($rs) > 0) {
-    	        if($response['MsgType'] == 'text') {
+    	        if($type == 'text') {
     	            //纯文本
     	            foreach ($rs as $text) {
     	                $data = array(
     	                    'touser' => $toUserOpenId,
     	                    'msgtype' => 'text',
     	                    'text' => array(
-    	                        'content' => '==='
+    	                        'content' => '===='
     	                    )
     	                );
-    	                wxHttpsRequest2($url, str_replace('===', $text, json_encode($data)));
+    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
     	            }
-    	        } else if($response['type'] == 'news') {
-    	        } else {
+    	        } else if($type == 'news') {
+    	        } else if($type == 'image'){
+    	            //纯图片
+    	            foreach ($rs as $mediaId) {
+    	                $data = array(
+    	                    'touser' => $toUserOpenId,
+    	                    'msgtype' => 'image',
+    	                    'image' => array(
+    	                        'media_id' => '===='
+    	                    )
+    	                );
+    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
+    	            }
     	        }
 	        }
 	    }

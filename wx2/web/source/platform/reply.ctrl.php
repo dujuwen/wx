@@ -37,7 +37,7 @@ if($do == 'display') {
 	$psize = 20;
 	$cids = $parentcates = $list =  array();
 	$types = array('', '等价', '包含', '正则表达式匹配', '直接接管');
-	
+
 	$condition = 'uniacid = :uniacid AND `module`=:module';
 	$params = array();
 	$params[':uniacid'] = $_W['uniacid'];
@@ -70,7 +70,7 @@ if($do == 'display') {
 
 if($do == 'post') {
 	if ($_W['isajax'] && $_W['ispost']) {
-		
+
 		$sql = 'SELECT `rid` FROM ' . tablename('rule_keyword') . " WHERE `uniacid` = :uniacid  AND `content` = :content";
 		$result = pdo_fetchall($sql, array(':uniacid' => $_W['uniacid'], ':content' => $_GPC['keyword']));
 		if (!empty($result)) {
@@ -116,12 +116,12 @@ if($do == 'post') {
 			$rule['displayorder'] = range_limit($rule['displayorder'], 0, 254);
 		}
 		$module = WeUtility::createModule($m);
-		
+
 		if(empty($module)) {
 			message('抱歉，模块不存在请重新其它模块！');
 		}
 		$msg = $module->fieldsFormValidate();
-		
+
 		if(is_string($msg) && trim($msg) != '') {
 			message($msg);
 		}
@@ -132,12 +132,12 @@ if($do == 'post') {
 			$rid = pdo_insertid();
 		}
 		if (!empty($rid)) {
-						$sql = 'DELETE FROM '. tablename('rule_keyword') . ' WHERE `rid`=:rid AND `uniacid`=:uniacid';
+			$sql = 'DELETE FROM '. tablename('rule_keyword') . ' WHERE `rid`=:rid AND `uniacid`=:uniacid';
 			$pars = array();
 			$pars[':rid'] = $rid;
 			$pars[':uniacid'] = $_W['uniacid'];
 			pdo_query($sql, $pars);
-	
+
 			$rowtpl = array(
 				'rid' => $rid,
 				'uniacid' => $_W['uniacid'],

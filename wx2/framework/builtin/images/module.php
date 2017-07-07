@@ -36,7 +36,23 @@ class ImagesModule extends WeModule {
 		$pars[':rid'] = $rid;
 		pdo_query($sql, $pars);
 		$this->replies['rid'] = $rid;
-		pdo_insert($this->tablename, $this->replies);
+
+		//使用三个分号分割数据;;;
+		$titles = explode(';;;', $this->replies['title']);
+		$mediaids = explode(';;;', $this->replies['mediaid']);
+		$descriptions = explode(';;;', $this->replies['description']);
+		if (is_array($titles) && is_array($mediaids) && is_array($descriptions) && (count($titles) == count($mediaids) && count($mediaids) == count($descriptions))) {
+		    $total = count($titles);
+		    for ($i = 0; $i < $total; $i++) {
+		        $this->replies['title'] = $titles[$i];
+		        $this->replies['mediaid'] = $mediaids[$i];
+		        $this->replies['description'] = $descriptions[$i];
+                pdo_insert($this->tablename, $this->replies);
+		    }
+		} else {
+		    echo "提交的数据不正确,请检测提交数据中';;;'是否是一样多的,后退修改后重新提交";die;
+		}
+
 		return true;
 	}
 
@@ -52,6 +68,6 @@ class ImagesModule extends WeModule {
 		pdo_delete($this->tablename, "id IN ('".implode("','", $deleteid)."')");
 		return true;
 	}
-	
+
 }
 

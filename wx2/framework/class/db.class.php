@@ -68,8 +68,8 @@ class DB {
 		$statement = $this->pdo->prepare($sql);
 		return $statement;
 	}
-	
-	
+
+
 	public function query($sql, $params = array()) {
 		$starttime = microtime();
 		if (empty($params)) {
@@ -100,7 +100,7 @@ class DB {
 		}
 	}
 
-	
+
 	public function fetchcolumn($sql, $params = array(), $column = 0) {
 		$starttime = microtime();
 		$statement = $this->prepare($sql);
@@ -120,8 +120,8 @@ class DB {
 			return $statement->fetchColumn($column);
 		}
 	}
-	
-	
+
+
 	public function fetch($sql, $params = array()) {
 		$starttime = microtime();
 		$statement = $this->prepare($sql);
@@ -142,7 +142,7 @@ class DB {
 		}
 	}
 
-	
+
 	public function fetchall($sql, $params = array(), $keyfield = '') {
 		$starttime = microtime();
 		$statement = $this->prepare($sql);
@@ -177,7 +177,7 @@ class DB {
 			}
 		}
 	}
-	
+
 	public function get($tablename, $params = array(), $fields = array()) {
 		$select = '*';
 		if (!empty($fields)){
@@ -191,7 +191,7 @@ class DB {
 		$sql = "SELECT {$select} FROM " . $this->tablename($tablename) . (!empty($condition['fields']) ? " WHERE {$condition['fields']}" : '') . " LIMIT 1";
 		return $this->fetch($sql, $condition['params']);
 	}
-	
+
 	public function getall($tablename, $params = array(), $fields = array(), $keyfield = '') {
 		$select = '*';
 		if (!empty($fields)){
@@ -205,7 +205,7 @@ class DB {
 		$sql = "SELECT {$select} FROM " .$this->tablename($tablename) . (!empty($condition['fields']) ? " WHERE {$condition['fields']}" : '') . $limitsql;
 		return $this->fetchall($sql, $condition['params'], $keyfield);
 	}
-	
+
 	public function getslice($tablename, $params = array(), $limit = array(), &$total = null, $fields = array(), $keyfield = '') {
 		$select = '*';
 		if (!empty($fields)){
@@ -227,7 +227,7 @@ class DB {
 		$total = pdo_fetchcolumn("SELECT COUNT(*) FROM " . tablename($tablename) . (!empty($condition['fields']) ? " WHERE {$condition['fields']}" : ''), $condition['params']);
 		return $this->fetchall($sql, $condition['params'], $keyfield);
 	}
-	
+
 	public function getcolumn($tablename, $params = array(), $field) {
 		$result = $this->get($tablename, $params, array($field));
 		if (!empty($result)) {
@@ -237,7 +237,7 @@ class DB {
 		}
 	}
 
-	
+
 	public function update($table, $data = array(), $params = array(), $glue = 'AND') {
 		$fields = $this->implode($data, ',');
 		$condition = $this->implode($params, $glue);
@@ -247,19 +247,19 @@ class DB {
 		return $this->query($sql, $params);
 	}
 
-	
+
 	public function insert($table, $data = array(), $replace = FALSE) {
 		$cmd = $replace ? 'REPLACE INTO' : 'INSERT INTO';
 		$condition = $this->implode($data, ',');
 		return $this->query("$cmd " . $this->tablename($table) . " SET {$condition['fields']}", $condition['params']);
 	}
-	
-	
+
+
 	public function insertid() {
 		return $this->pdo->lastInsertId();
 	}
 
-	
+
 	public function delete($table, $params = array(), $glue = 'AND') {
 		$condition = $this->implode($params, $glue);
 		$sql = "DELETE FROM " . $this->tablename($table);
@@ -267,22 +267,22 @@ class DB {
 		return $this->query($sql, $condition['params']);
 	}
 
-	
+
 	public function begin() {
 		$this->pdo->beginTransaction();
 	}
 
-	
+
 	public function commit() {
 		$this->pdo->commit();
 	}
 
-	
+
 	public function rollback() {
 		$this->pdo->rollBack();
 	}
 
-	
+
 	private function implode($params, $glue = ',') {
 		$result = array('fields' => ' 1 ', 'params' => array());
 		$split = '';
@@ -334,8 +334,8 @@ class DB {
 		}
 		return $result;
 	}
-	
-	
+
+
 	public function run($sql, $stuff = 'ims_') {
 		if(!isset($sql) || empty($sql)) return;
 
@@ -360,14 +360,14 @@ class DB {
 			}
 		}
 	}
-	
-	
+
+
 	public function fieldexists($tablename, $fieldname) {
 		$isexists = $this->fetch("DESCRIBE " . $this->tablename($tablename) . " `{$fieldname}`", array());
 		return !empty($isexists) ? true : false;
 	}
-	
-	
+
+
 	public function indexexists($tablename, $indexname) {
 		if (!empty($indexname)) {
 			$indexs = $this->fetchall("SHOW INDEX FROM " . $this->tablename($tablename), array(), '');
@@ -381,14 +381,18 @@ class DB {
 		}
 		return false;
 	}
-	
-	
+
+
 	public function tablename($table) {
 		return "`{$this->tablepre}{$table}`";
 	}
 
-	
+
 	public function debug($output = true, $append = array()) {
+	    if ($output && isset($append['sql'])) {
+    	    infoLog('db_log', $append['sql']);
+	    }
+
 		if(!empty($append)) {
 			$output = false;
 			array_push($this->errors, $append);
@@ -415,7 +419,7 @@ class DB {
 		return $this->errors;
 	}
 
-	
+
 	public function tableexists($table) {
 		if(!empty($table)) {
 			$data = $this->fetch("SHOW TABLES LIKE '{$this->tablepre}{$table}'", array());
@@ -434,7 +438,7 @@ class DB {
 			return false;
 		}
 	}
-	
+
 	private function performance($sql, $runtime = 0) {
 		global $_W;
 		if ($runtime == 0) {
