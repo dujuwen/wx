@@ -839,6 +839,10 @@ EOF;
 	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
+
+    	    infoLog('djw_test', $classname);
+    	    infoLog('djw_test', $rs);
+
 	        if (is_array($rs) && count($rs) > 0) {
     	        if($type == 'text') {
     	            //纯文本
