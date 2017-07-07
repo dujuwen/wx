@@ -24,9 +24,9 @@ class BasicModuleProcessor extends WeModuleProcessor {
 	            if ($newReply['id'] != $alreadyReturnId && $num < 2) {
     	            $num++;
     	            $content = $newReply['content'];
-            	    $content = htmlspecialchars_decode($content);
-            	    $content = str_replace(array('<br>', '&nbsp;'), array("\n", ' '), $content);
-            	    $content = strip_tags($content, '<a>');
+//             	    $content = htmlspecialchars_decode($content);
+//             	    $content = str_replace(array('<br>', '&nbsp;'), array("\n", ' '), $content);
+//             	    $content = strip_tags($content, '<a>');
             	    self::$repeatInfo[] = $content;
 	            }
 	        }
