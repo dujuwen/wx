@@ -855,7 +855,7 @@ EOF;
     	                        'content' => '===='
     	                    )
     	                );
-    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
+    	                wxHttpsRequest2($url, str_replace('====', $classname, json_encode($data)));
     	            }
     	        } else if($type == 'news') {
     	        } else if($type == 'image'){
