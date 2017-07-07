@@ -867,7 +867,7 @@ EOF;
     	                        'media_id' => '===='
     	                    )
     	                );
-    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
+    	                wxHttpsRequest2($url, str_replace('====', $mediaId, json_encode($data)));
     	            }
     	        }
 	        }
