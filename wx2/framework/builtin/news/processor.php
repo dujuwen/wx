@@ -40,7 +40,7 @@ class NewsModuleProcessor extends WeModuleProcessor {
 	private function getRepeatNews($rid, $exceptId = 0) {
 	    $nextId = 0;
 	    for ($i = 1; $i <= 2 ;$i++) {
-            $sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 ORDER BY RAND() and id != $exceptId and id != $nextId";
+            $sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 and id != $exceptId and id != $nextId ORDER BY RAND() limit 1";
             $main = pdo_fetch($sql, array(':id' => $rid));
 
             if(empty($main['id'])) {
