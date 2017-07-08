@@ -840,8 +840,8 @@ EOF;
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
 
-    	    infoLog('djw_test', $classname);
-    	    infoLog('djw_test', $rs);
+//     	    infoLog('djw_test', $classname);
+//     	    infoLog('djw_test', $rs);
 
 	        if (is_array($rs) && count($rs) > 0) {
     	        if($type == 'text') {
@@ -857,6 +857,24 @@ EOF;
     	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
     	            }
     	        } else if($type == 'news') {
+    	            //图文消息
+	                $data = array(
+	                    'touser' => $toUserOpenId,
+	                    'msgtype' => 'news',
+	                    'news' => array(
+	                        'articles' => []
+	                    )
+	                );
+    	            foreach ($rs as $news) {
+    	                $data['news']['articles'][] = [
+    	                    'title' => $news['title'],
+    	                    'description' => $news['description'],
+    	                    'url' => $news['url'],
+    	                    'picurl' => $news['picurl']
+    	                ];
+    	                wxHttpsRequest2($url, json_encode($data));
+    	            }
+
     	        } else if($type == 'image'){
     	            //纯图片
     	            foreach ($rs as $mediaId) {
