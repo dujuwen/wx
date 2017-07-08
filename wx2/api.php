@@ -858,45 +858,22 @@ EOF;
     	            }
     	        } else if($type == 'news') {
     	            //图文消息
-// 	                $data = array(
-// 	                    'touser' => $toUserOpenId,
-// 	                    'msgtype' => 'news',
-// 	                    'news' => array(
-// 	                        'articles' => []
-// 	                    )
-// 	                );
-//     	            foreach ($rs as $news) {
-//     	                $data['news']['articles'][] = [
-//     	                    'title' => $news['title'],
-//     	                    'description' => $news['description'],
-//     	                    'url' => $news['url'],
-//     	                    'picurl' => $news['picurl']
-//     	                ];
-//     	                wxHttpsRequest2($url, json_encode($data));
-//     	            }
-
-    	            $data= '{
-    "touser":"OPENID==",
-    "msgtype":"news",
-    "news":{
-        "articles": [
-         {
-             "title":"Happy Day",
-             "description":"Is Really A Happy Day",
-             "url":"URL",
-             "picurl":"PIC_URL"
-         },
-         {
-             "title":"Happy Day",
-             "description":"Is Really A Happy Day",
-             "url":"URL",
-             "picurl":"PIC_URL"
-         }
-         ]
-    }
-}';
-    	                wxHttpsRequest2($url, str_replace('OPENID==', $toUserOpenId, $data));
-
+	                $data = array(
+	                    'touser' => $toUserOpenId,
+	                    'msgtype' => 'news',
+	                    'news' => array(
+	                        'articles' => []
+	                    )
+	                );
+    	            foreach ($rs as $news) {
+    	                $data['news']['articles'][] = [
+    	                    'title' => $news['title'],
+    	                    'description' => $news['description'],
+    	                    'url' => $news['url'],
+    	                    'picurl' => $news['picurl']
+    	                ];
+    	            }
+	                wxHttpsRequest2($url, json_encode($data));
     	        } else if($type == 'image'){
     	            //纯图片
     	            foreach ($rs as $mediaId) {
