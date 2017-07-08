@@ -875,8 +875,8 @@ EOF;
             	                    'picurl' => $new['picurl']
             	                ];
         	                }
+        	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
     	                }
-    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
     	            }
     	        } else if($type == 'image'){
     	            //纯图片
