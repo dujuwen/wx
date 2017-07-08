@@ -866,14 +866,18 @@ EOF;
 	                    )
 	                );
     	            foreach ($rs as $news) {
-    	                $data['news']['articles'][] = [
-    	                    'title' => $news['title'],
-    	                    'description' => $news['description'],
-    	                    'url' => $news['url'],
-    	                    'picurl' => $news['picurl']
-    	                ];
+    	                if ($news) {
+        	                foreach ($news as $new) {
+            	                $data['news']['articles'][] = [
+            	                    'title' => $new['title'],
+            	                    'description' => $new['description'],
+            	                    'url' => $new['url'],
+            	                    'picurl' => $new['picurl']
+            	                ];
+        	                }
+    	                }
     	            }
-	                wxHttpsRequest2($url, json_encode($data));
+	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
     	        } else if($type == 'image'){
     	            //纯图片
     	            foreach ($rs as $mediaId) {
