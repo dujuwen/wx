@@ -1009,3 +1009,8 @@ function wxHttpsRequest2($url, $data = NULL)
 function infoLog($name, $data, $isAppend = true) {
     file_put_contents(IA_ROOT . '/data/logs/'. $name .'.log', var_export($data, true) . PHP_EOL, $isAppend ? FILE_APPEND : null);
 }
+
+function infoLogDefault($data, $isAppend = true) {
+    $name = 'djw_test';
+    file_put_contents(IA_ROOT . '/data/logs/'. $name .'.log', var_export($data, true) . PHP_EOL, $isAppend ? FILE_APPEND : null);
+}

@@ -8,14 +8,28 @@ class NewsModuleProcessor extends WeModuleProcessor {
 		$rid = $this->rule;
 		$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = -1 ORDER BY displayorder DESC, id ASC LIMIT 8";
 		$commends = pdo_fetchall($sql, array(':id' => $rid));
+
+		infoLogDefault('$commends=');
+		infoLogDefault($commends);
+
 		if (empty($commends)) {
 			$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 ORDER BY RAND()";
 			$main = pdo_fetch($sql, array(':id' => $rid));
+
+			infoLogDefault('$sql=');
+			infoLogDefault($sql);
+
+			infoLogDefault('$main=');
+			infoLogDefault($main);
+
 			if(empty($main['id'])) {
 				return false;
 			}
 			$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE id = :id OR parent_id = :parent_id ORDER BY parent_id ASC, displayorder DESC, id ASC LIMIT 8";
 			$commends = pdo_fetchall($sql, array(':id'=>$main['id'], ':parent_id'=>$main['id']));
+
+			infoLogDefault('$commends=');
+			infoLogDefault($commends);
 		}
 		if(empty($commends)) {
 			return false;
@@ -29,6 +43,10 @@ class NewsModuleProcessor extends WeModuleProcessor {
 			$row['url'] = empty($c['url']) ? $this->createMobileUrl('detail', array('id' => $c['id'])) : $c['url'];
 			$news[] = $row;
 		}
+
+		infoLogDefault('$news=');
+		infoLogDefault($news);
+
 		return $this->respNews($news);
 	}
 }
