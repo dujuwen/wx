@@ -10,7 +10,7 @@ class NewsModuleProcessor extends WeModuleProcessor {
 		$commends = pdo_fetchall($sql, array(':id' => $rid));
 
 		if (empty($commends)) {
-			$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 ORDER BY RAND()";
+			$sql = "SELECT * FROM " . tablename('news_reply') . " WHERE rid = :id AND parent_id = 0 ORDER BY id asc limit 1";
 			$main = pdo_fetch($sql, array(':id' => $rid));
 			if(empty($main['id'])) {
 				return false;
