@@ -144,10 +144,11 @@ class WeEngine {
 			exit(htmlspecialchars($_GET['echostr']));
 		}
 		if(strtolower($_SERVER['REQUEST_METHOD']) == 'post') {
-			$postStr = file_get_contents('php://input');
-						if(!empty($_GET['encrypt_type']) && $_GET['encrypt_type'] == 'aes') {
-				$postStr = $this->account->decryptMsg($postStr);
-			}
+            $postStr = file_get_contents('php://input');
+            if(!empty($_GET['encrypt_type']) && $_GET['encrypt_type'] == 'aes') {
+            $postStr = $this->account->decryptMsg($postStr);
+        }
+
 			WeUtility::logging('trace', $postStr);
 			$message = $this->account->parse($postStr);
 
