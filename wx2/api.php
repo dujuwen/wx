@@ -691,7 +691,7 @@ EOF;
 
 	public function analyzeCoupon(&$message) {
 		global $_W;
-				if($message['event'] == 'poi_check_notify') {
+        if($message['event'] == 'poi_check_notify') {
 			$data['status'] = ($message['result'] == 'succ') ? 1 : 3;
 			$data['location_id'] = trim($message['poiid']);
 			$data['message'] = trim($message['msg']);
@@ -699,16 +699,16 @@ EOF;
 			pdo_update('activity_stores', $data, array('sid' => $id, 'uniacid' => $_W['uniacid']));
 			return true;
 		}
-				if(in_array($message['event'], array('card_pass_check', 'card_not_pass_check'))) {
+        if(in_array($message['event'], array('card_pass_check', 'card_not_pass_check'))) {
 			$data['status'] = ($message['event'] == 'card_pass_check') ? 3 : 2;
 			$card_id = trim($message['cardid']);
 			$is_ok = pdo_fetchcolumn('SELECT id FROM ' . tablename('coupon') . ' WHERE acid = :acid AND card_id = :card_id', array(':acid' => $_W['acid'], ':card_id' => $card_id));
 			if(empty($is_ok)) {
 				$insert = array(
-						'uniacid' => $_W['uniacid'],
-						'acid' => $_W['acid'],
-						'card_id' => $card_id,
-						'status' => $data['status'],
+					'uniacid' => $_W['uniacid'],
+					'acid' => $_W['acid'],
+					'card_id' => $card_id,
+					'status' => $data['status'],
 				);
 				pdo_insert('coupon', $insert);
 			} else {
@@ -716,39 +716,40 @@ EOF;
 			}
 			return true;
 		}
-				if($message['event'] == 'user_get_card') {
-						$hash = md5($message['fromusername'] . $message['createtime'] . $message['usercardcode']);
-			$is_exist = pdo_fetchcolumn('SELECT id FROM ' . tablename('coupon_record') . ' WHERE acid = :acid AND hash = :hash', array(':acid' => $_W['acid'], ':hash' => $hash));
-			if(empty($is_exist)) {
-				$data['uniacid'] = $_W['uniacid'];
-				$data['acid'] = $_W['acid'];
-				$data['givebyfriend'] = intval($message['isgivebyfriend']);
-				$data['card_id'] = trim($message['cardid']);
-				$data['openid'] = trim($message['fromusername']);
-				$data['friend_openid'] = trim($message['friendusername']);
-				$data['outer_id'] = intval($message['outerid']);
-				$data['code'] = trim($message['usercardcode']);
-				$data['addtime'] = TIMESTAMP;
-				$data['hash'] = $hash;
-				$data['status'] = 1;
-				$old_code = trim($message['oldusercardcode']);
-								pdo_insert('coupon_record', $data);
-				if(!empty($data['givebyfriend'])) {
-					pdo_query('DELETE FROM ' . tablename('coupon_record') . ' WHERE acid = :acid AND card_id = :card_id AND openid = :openid AND code = :code', array(':acid' => $_W['acid'], ':card_id' => $data['card_id'], ':openid' => $data['friend_openid'], ':code' => $old_code));
-				} else {
-										pdo_query('UPDATE ' . tablename('coupon') . 'SET quantity = quantity - 1 WHERE acid = :acid AND card_id = :card_id', array(':acid' => $_W['acid'], 'card_id' => $data['card_id']));
-				}
-			}
-			return true;
+
+        if($message['event'] == 'user_get_card') {
+                $hash = md5($message['fromusername'] . $message['createtime'] . $message['usercardcode']);
+    			$is_exist = pdo_fetchcolumn('SELECT id FROM ' . tablename('coupon_record') . ' WHERE acid = :acid AND hash = :hash', array(':acid' => $_W['acid'], ':hash' => $hash));
+    			if(empty($is_exist)) {
+    				$data['uniacid'] = $_W['uniacid'];
+    				$data['acid'] = $_W['acid'];
+    				$data['givebyfriend'] = intval($message['isgivebyfriend']);
+    				$data['card_id'] = trim($message['cardid']);
+    				$data['openid'] = trim($message['fromusername']);
+    				$data['friend_openid'] = trim($message['friendusername']);
+    				$data['outer_id'] = intval($message['outerid']);
+    				$data['code'] = trim($message['usercardcode']);
+    				$data['addtime'] = TIMESTAMP;
+    				$data['hash'] = $hash;
+    				$data['status'] = 1;
+    				$old_code = trim($message['oldusercardcode']);
+    				pdo_insert('coupon_record', $data);
+    				if(!empty($data['givebyfriend'])) {
+    					pdo_query('DELETE FROM ' . tablename('coupon_record') . ' WHERE acid = :acid AND card_id = :card_id AND openid = :openid AND code = :code', array(':acid' => $_W['acid'], ':card_id' => $data['card_id'], ':openid' => $data['friend_openid'], ':code' => $old_code));
+    				} else {
+    					pdo_query('UPDATE ' . tablename('coupon') . 'SET quantity = quantity - 1 WHERE acid = :acid AND card_id = :card_id', array(':acid' => $_W['acid'], 'card_id' => $data['card_id']));
+    				}
+    			}
+    			return true;
 		}
-				if($message['event'] == 'user_del_card') {
+        if($message['event'] == 'user_del_card') {
 			$card_id = trim($message['cardid']);
 			$openid = trim($message['fromusername']);
 			$code = trim($message['usercardcode']);
 			pdo_update('coupon_record', array('status' => 4), array('acid' => $_W['acid'], 'card_id' => $card_id, 'openid' => $openid, 'code' => $code));
 			return true;
 		}
-				if($message['event'] == 'user_consume_card') {
+        if($message['event'] == 'user_consume_card') {
 			$card_id = trim($message['cardid']);
 			$openid = trim($message['fromusername']);
 			$code = trim($message['usercardcode']);
@@ -841,9 +842,6 @@ EOF;
 	        $classname = "{$name}ModuleProcessor";
 	        $rs = $classname::getResponds();
 
-//     	    infoLog('djw_test', $classname);
-//     	    infoLog('djw_test', $rs);
-
 	        if (is_array($rs) && count($rs) > 0) {
     	        if($type == 'text') {
     	            //纯文本
@@ -896,5 +894,3 @@ EOF;
 	    }
 	}
 }
-
-
