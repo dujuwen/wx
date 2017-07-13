@@ -855,6 +855,9 @@ EOF;
         	        $response = $this->process($hitParam);
         	        $classname = "{$needType}ModuleProcessor";
         	        $rs = $classname::getResponds2();
+	               \infoLogDefault($hitParam);
+	               \infoLogDefault($response);
+	               \infoLogDefault($classname);
 	               \infoLogDefault($rs);
 
         	        if (is_array($rs) && count($rs) > 0) {
