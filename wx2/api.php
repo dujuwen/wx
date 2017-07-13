@@ -261,8 +261,8 @@ class WeEngine {
 			ob_end_clean();
 
             //重复推送
-// 			\infoLogDefault($hitParam);
-// 			$this->repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam);
+			\infoLogDefault($hitParam);
+			$this->repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam);
 			exit();
 		}
 		WeUtility::logging('waring', 'Request Failed');
@@ -837,7 +837,7 @@ EOF;
 		exit($resp);
 	}
 
-	public function repeatPushMessage($response, $name, $hitKeyword, $hitParam) {
+	public function repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam) {
 	    global $_W, $engine;
 
 	    $toUserOpenId = $engine->message['from'];
@@ -847,10 +847,10 @@ EOF;
 
 	    $type = isset($response['MsgType']) ? $response['MsgType'] : '';
 	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
-	        foreach (array('text', 'image', 'news') as $needType) {
+	        foreach (array('basic', 'news', 'images') as $needType) {
 	            \infoLogDefault("循环{$needType}");
 
-                if (1 || $needType != $name) {
+                if (1) {
                     $hitParam['module'] = $needType;
         	        $response = $this->process($hitParam, true);
         	        $classname = "{$needType}ModuleProcessor";
