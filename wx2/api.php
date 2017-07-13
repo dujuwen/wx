@@ -857,7 +857,7 @@ EOF;
 	    }
 
 	    if (count($allData)) {
-	        foreach (array('basic', 'news', 'images') as $needType) {
+	        foreach (array('basic', 'images', 'news') as $needType) {
 	            if (isset($allData[$needType])) {
 	                $rs = $allData[$needType];
 	                $type = $rs['MsgType'];
