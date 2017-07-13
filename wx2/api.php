@@ -182,6 +182,9 @@ class WeEngine {
 			$hitKeyword = array();
 			$response = array();
 			$repeatModule = '';
+
+			infoLogDefault($pars);
+
 			foreach($pars as $par) {
 				if(empty($par['module'])) {
 					continue;
