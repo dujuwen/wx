@@ -183,8 +183,6 @@ class WeEngine {
 			$response = array();
 			$repeatModule = '';
 
-			infoLogDefault($pars);
-
 			foreach($pars as $par) {
 				if(empty($par['module'])) {
 					continue;
@@ -251,13 +249,18 @@ class WeEngine {
 			);
 			$resp = str_replace(array_keys($mapping), array_values($mapping), $resp);
 			ob_start();
-			echo $resp;
+
+			$type = isset($response['MsgType']) ? $response['MsgType'] : '';
+			if (! in_array($type, array('text', 'news', 'image'))) {
+    			echo $resp;
+			}
+
 			ob_start();
 			$this->receive($hitParam, $hitKeyword, $response);
 			ob_end_clean();
 
             //重复推送
-			$this->repeatPushMessage($response, $repeatModule);
+			$this->repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam);
 			exit();
 		}
 		WeUtility::logging('waring', 'Request Failed');
@@ -832,7 +835,7 @@ EOF;
 		exit($resp);
 	}
 
-	public function repeatPushMessage($response, $name) {
+	public function repeatPushMessage($response, $name, $hitKeyword, $hitParam) {
 	    global $_W, $engine;
 
 	    $toUserOpenId = $engine->message['from'];
@@ -842,58 +845,121 @@ EOF;
 
 	    $type = isset($response['MsgType']) ? $response['MsgType'] : '';
 	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
-	        $classname = "{$name}ModuleProcessor";
-	        $rs = $classname::getResponds();
+	        foreach (array('text', 'image', 'news') as $needType) {
+                if (1 || $needType != $name) {
+        	        $response = $this->process($hitParam);
+        	        $classname = "{$name}ModuleProcessor";
+        	        $rs = $classname::getResponds2();
 
-	        if (is_array($rs) && count($rs) > 0) {
-    	        if($type == 'text') {
-    	            //纯文本
-    	            foreach ($rs as $text) {
-    	                $data = array(
-    	                    'touser' => $toUserOpenId,
-    	                    'msgtype' => 'text',
-    	                    'text' => array(
-    	                        'content' => '===='
-    	                    )
-    	                );
-    	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
-    	            }
-    	        } else if($type == 'news') {
-    	            //图文消息
-    	            foreach ($rs as $news) {
-    	                $data = array(
-    	                    'touser' => $toUserOpenId,
-    	                    'msgtype' => 'news',
-    	                    'news' => array(
-    	                        'articles' => []
-    	                    )
-    	                );
-    	                if ($news) {
-        	                foreach ($news as $new) {
-            	                $data['news']['articles'][] = [
-            	                    'title' => $new['title'],
-            	                    'description' => $new['description'],
-            	                    'url' => $new['url'],
-            	                    'picurl' => $new['picurl']
-            	                ];
-        	                }
-        	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
-    	                }
-    	            }
-    	        } else if($type == 'image'){
-    	            //纯图片
-    	            foreach ($rs as $mediaId) {
-    	                $data = array(
-    	                    'touser' => $toUserOpenId,
-    	                    'msgtype' => 'image',
-    	                    'image' => array(
-    	                        'media_id' => '===='
-    	                    )
-    	                );
-    	                wxHttpsRequest2($url, str_replace('====', $mediaId, json_encode($data)));
-    	            }
-    	        }
+        	        if (is_array($rs) && count($rs) > 0) {
+            	        if($type == 'text') {
+            	            //纯文本
+            	            foreach ($rs as $text) {
+            	                $data = array(
+            	                    'touser' => $toUserOpenId,
+            	                    'msgtype' => 'text',
+            	                    'text' => array(
+            	                        'content' => '===='
+            	                    )
+            	                );
+            	                wxHttpsRequest2($url, str_replace('====', $text['Content'], json_encode($data)));
+            	                continue;
+            	            }
+            	        } else if($type == 'news') {
+            	            //图文消息
+            	            foreach ($rs as $news) {
+            	                $data = array(
+            	                    'touser' => $toUserOpenId,
+            	                    'msgtype' => 'news',
+            	                    'news' => array(
+            	                        'articles' => []
+            	                    )
+            	                );
+            	                if ($news) {
+            	                    $news = $news['Articles'];
+                	                foreach ($news as $new) {
+                    	                $data['news']['articles'][] = [
+                    	                    'title' => $new['Title'],
+                    	                    'description' => $new['Description'],
+                    	                    'url' => $new['Url'],
+                    	                    'picurl' => $new['PicUrl']
+                    	                ];
+                	                }
+                	                wxHttpsRequest2($url, json_encode($data));
+                	                continue;
+            	                }
+            	            }
+            	        } else if($type == 'image'){
+            	            //纯图片
+            	            foreach ($rs as $mediaId) {
+            	                $data = array(
+            	                    'touser' => $toUserOpenId,
+            	                    'msgtype' => 'image',
+            	                    'image' => array(
+            	                        'media_id' => '===='
+            	                    )
+            	                );
+            	                wxHttpsRequest2($url, str_replace('====', $mediaId['Image']['MediaId'], json_encode($data)));
+            	                continue;
+            	            }
+            	        }
+        	        }
+                }
 	        }
 	    }
+// 	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
+// 	        $classname = "{$name}ModuleProcessor";
+// 	        $rs = $classname::getResponds();
+
+// 	        if (is_array($rs) && count($rs) > 0) {
+//     	        if($type == 'text') {
+//     	            //纯文本
+//     	            foreach ($rs as $text) {
+//     	                $data = array(
+//     	                    'touser' => $toUserOpenId,
+//     	                    'msgtype' => 'text',
+//     	                    'text' => array(
+//     	                        'content' => '===='
+//     	                    )
+//     	                );
+//     	                wxHttpsRequest2($url, str_replace('====', $text, json_encode($data)));
+//     	            }
+//     	        } else if($type == 'news') {
+//     	            //图文消息
+//     	            foreach ($rs as $news) {
+//     	                $data = array(
+//     	                    'touser' => $toUserOpenId,
+//     	                    'msgtype' => 'news',
+//     	                    'news' => array(
+//     	                        'articles' => []
+//     	                    )
+//     	                );
+//     	                if ($news) {
+//         	                foreach ($news as $new) {
+//             	                $data['news']['articles'][] = [
+//             	                    'title' => $new['title'],
+//             	                    'description' => $new['description'],
+//             	                    'url' => $new['url'],
+//             	                    'picurl' => $new['picurl']
+//             	                ];
+//         	                }
+//         	                wxHttpsRequest2($url, json_encode($data));
+//     	                }
+//     	            }
+//     	        } else if($type == 'image'){
+//     	            //纯图片
+//     	            foreach ($rs as $mediaId) {
+//     	                $data = array(
+//     	                    'touser' => $toUserOpenId,
+//     	                    'msgtype' => 'image',
+//     	                    'image' => array(
+//     	                        'media_id' => '===='
+//     	                    )
+//     	                );
+//     	                wxHttpsRequest2($url, str_replace('====', $mediaId, json_encode($data)));
+//     	            }
+//     	        }
+// 	        }
+// 	    }
 	}
 }

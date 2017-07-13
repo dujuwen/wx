@@ -34,7 +34,10 @@ class NewsModuleProcessor extends WeModuleProcessor {
 			$news[] = $row;
 		}
 
-		return $this->respNews($news);
+		$re = $this->respNews($news);
+		self::$repeatInfo2[] = $re;
+
+		return $re;
 	}
 
 	private function getRepeatNews($rid, $exceptId = 0) {

@@ -20,6 +20,9 @@ class ImagesModuleProcessor extends WeModuleProcessor {
 		    }
 		}
 
-		return $this->respImage($mediaid);
+		$re = $this->respImage($mediaid);
+        self::$repeatInfo2[] = $re;
+
+		return $re;
 	}
 }

@@ -4,12 +4,12 @@ defined('IN_IA') or exit('Access Denied');
 
 
 abstract class WeAccount {
-	
+
 	const TYPE_WEIXIN = '1';
 	const TYPE_YIXIN = '2';
 	const TYPE_WEIXIN_PLATFORM = '3';
-	
-	
+
+
 	public static function create($acidOrAccount = '') {
 		global $_W;
 		if(empty($acidOrAccount)) {
@@ -39,13 +39,13 @@ abstract class WeAccount {
 		}
 		return null;
 	}
-	
+
 	static public function token($type = 1) {
 		$classname = self::includes($type);
 		$obj = new $classname();
 		return $obj->fetch_available_token();
 	}
-	
+
 	static public function includes($type = 1) {
 		if($type == '1') {
 			load()->classs('weixin.account');
@@ -56,31 +56,31 @@ abstract class WeAccount {
 			return 'YiXinAccount';
 		}
 	}
-	
-	
+
+
 	abstract public function __construct($account);
 
-	
+
 	public function checkSign() {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
 
-	
+
 	public function fetchAccountInfo() {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
 
-	
+
 	public function queryAvailableMessages() {
 		return array();
 	}
-	
-	
+
+
 	public function queryAvailablePackets() {
 		return array();
 	}
 
-	
+
 	public function parse($message) {
 		global $_W;
 		if (!empty($message)){
@@ -104,7 +104,7 @@ abstract class WeAccount {
 					$packet['thumb'] = $message['ThumbMediaId'];
 					break;
 			}
-	
+
 			switch ($packet['event']) {
 				case 'subscribe':
 					$packet['type'] = 'subscribe';
@@ -118,7 +118,7 @@ abstract class WeAccount {
 							$packet['scene'] = '"' . str_replace('\\u', '\u', $packet['scene']) . '"';
 							$packet['scene'] = json_decode($packet['scene']);
 						}
-	
+
 					}
 					break;
 				case 'unsubscribe':
@@ -155,8 +155,8 @@ abstract class WeAccount {
 		}
 		return $packet;
 	}
-	
-	
+
+
 	public function response($packet) {
 		if (is_error($packet)) {
 			return '';
@@ -178,121 +178,121 @@ abstract class WeAccount {
 		return array2xml($packet);
 	}
 
-	
+
 	public function isPushSupported() {
 		return false;
 	}
-	
-	
+
+
 	public function push($uniid, $packet) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function isBroadcastSupported() {
 		return false;
 	}
-	
-	
+
+
 	public function broadcast($packet, $targets = array()) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
 
-	
+
 	public function isMenuSupported() {
 		return false;
 	}
-	
-	
+
+
 	public function menuCreate($menu) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function menuDelete() {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function menuModify($menu) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function menuQuery() {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function queryFansActions() {
 		return array();
 	}
-	
-	
+
+
 	public function fansGroupAll() {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function fansGroupCreate($group) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function fansGroupModify($group) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function fansMoveGroup($uniid, $group) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function fansQueryGroup($uniid) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function fansQueryInfo($uniid, $isPlatform) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function fansAll() {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function queryTraceActions() {
 		return array();
 	}
-	
-	
+
+
 	public function traceCurrent($uniid) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function traceHistory($uniid, $time) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function queryBarCodeActions() {
 		return array();
 	}
-	
-	
+
+
 	public function barCodeCreateDisposable($barcode) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
-	
+
+
 	public function barCodeCreateFixed($barcode) {
 		trigger_error('not supported.', E_USER_WARNING);
 	}
-	
+
 	public function downloadMedia($media){
 		trigger_error('not supported.', E_USER_WARNING);
 	}
@@ -300,10 +300,10 @@ abstract class WeAccount {
 
 
 class WeUtility {
-	
+
 	private static function defineConst($obj){
 		global $_W;
-		
+
 		if ($obj instanceof WeBase) {
 			if (!defined('MODULE_ROOT')) {
 				define('MODULE_ROOT', dirname($obj->__define));
@@ -313,8 +313,8 @@ class WeUtility {
 			}
 		}
 	}
-	
-	
+
+
 	public static function createModule($name) {
 		global $_W;
 		static $file;
@@ -349,7 +349,7 @@ class WeUtility {
 		}
 	}
 
-	
+
 	public static function createModuleProcessor($name) {
 		global $_W;
 		static $file;
@@ -384,7 +384,7 @@ class WeUtility {
 		}
 	}
 
-	
+
 	public static function createModuleReceiver($name) {
 		global $_W;
 		static $file;
@@ -419,7 +419,7 @@ class WeUtility {
 		}
 	}
 
-	
+
 	public static function createModuleSite($name) {
 		global $_W;
 		static $file;
@@ -455,7 +455,7 @@ class WeUtility {
 		}
 	}
 
-	
+
 	public static function createModuleCron($name) {
 		global $_W;
 		static $file;
@@ -490,7 +490,7 @@ class WeUtility {
 		}
 	}
 
-	
+
 	public static function logging($level = 'info', $message = '') {
 		$filename = IA_ROOT . '/data/logs/' . date('Ymd') . '.log';
 		load()->func('file');
@@ -526,18 +526,18 @@ class WeUtility {
 }
 
 abstract class WeBase {
-	
+
 	public $modulename;
-	
+
 	public $module;
-	
+
 	public $weid;
-	
+
 	public $uniacid;
-	
+
 	public $__define;
 
-	
+
 	public function saveSettings($settings) {
 		global $_W;
 		$pars = array('module' => $this->modulename, 'uniacid' => $_W['uniacid']);
@@ -551,7 +551,7 @@ abstract class WeBase {
 		}
 	}
 
-	
+
 	protected function createMobileUrl($do, $query = array(), $noredirect = true) {
 		global $_W;
 		$query['do'] = $do;
@@ -559,14 +559,14 @@ abstract class WeBase {
 		return murl('entry', $query, $noredirect);
 	}
 
-	
+
 	protected function createWebUrl($do, $query = array()) {
 		$query['do'] = $do;
 		$query['m'] = strtolower($this->modulename);
 		return wurl('site/entry', $query);
 	}
 
-	
+
 	protected function template($filename) {
 		global $_W;
 		$name = strtolower($this->modulename);
@@ -620,50 +620,52 @@ abstract class WeBase {
 
 
 abstract class WeModule extends WeBase {
-	
+
 	public function fieldsFormDisplay($rid = 0) {
 		return '';
 	}
-	
+
 	public function fieldsFormValidate($rid = 0) {
 		return '';
 	}
-	
+
 	public function fieldsFormSubmit($rid) {
 			}
-	
+
 	public function ruleDeleted($rid) {
 		return true;
 	}
-	
+
 	public function settingsDisplay($settings) {
 			}
 }
 
 
 abstract class WeModuleProcessor extends WeBase {
-	
+
 	public $priority;
-	
+
 	public $message;
-	
+
 	public $inContext;
-	
+
 	public $rule;
 
 	public static $repeatInfo = array();
 
+	public static $repeatInfo2 = array();
+
 	public function __construct(){
 		global $_W;
-		
+
 		$_W['member'] = array();
 		if(!empty($_W['openid'])){
 			load()->model('mc');
 			$_W['member'] = mc_fetch($_W['openid']);
 		}
 	}
-	
-	
+
+
 	protected function beginContext($expire = 1800) {
 		if($this->inContext) {
 			return true;
@@ -675,10 +677,10 @@ abstract class WeModuleProcessor extends WeBase {
 		$_SESSION['__contextexpire'] = TIMESTAMP + $expire;
 		$_SESSION['__contextpriority'] = $this->priority;
 		$this->inContext = true;
-		
+
 		return true;
 	}
-	
+
 	protected function refreshContext($expire = 1800) {
 		if(!$this->inContext) {
 			return false;
@@ -686,10 +688,10 @@ abstract class WeModuleProcessor extends WeBase {
 		$expire = intval($expire);
 		WeSession::$expire = $expire;
 		$_SESSION['__contextexpire'] = TIMESTAMP + $expire;
-		
+
 		return true;
 	}
-	
+
 	protected function endContext() {
 		unset($_SESSION['__contextmodule']);
 		unset($_SESSION['__contextrule']);
@@ -698,11 +700,15 @@ abstract class WeModuleProcessor extends WeBase {
 		unset($_SESSION);
 		session_destroy();
 	}
-	
+
 	abstract function respond();
 
 	public static function getResponds() {
 	    return self::$repeatInfo;
+	}
+
+	public static function getResponds2() {
+	    return self::$repeatInfo2;
 	}
 
 	protected function respText($content) {
@@ -731,7 +737,7 @@ abstract class WeModuleProcessor extends WeBase {
 		}
 		return $response;
 	}
-	
+
 	protected function respImage($mid) {
 		if (empty($mid)) {
 			return error(-1, 'Invaild value');
@@ -743,7 +749,7 @@ abstract class WeModuleProcessor extends WeBase {
 		$response['Image']['MediaId'] = $mid;
 		return $response;
 	}
-	
+
 	protected function respVoice($mid) {
 		if (empty($mid)) {
 			return error(-1, 'Invaild value');
@@ -755,7 +761,7 @@ abstract class WeModuleProcessor extends WeBase {
 		$response['Voice']['MediaId'] = $mid;
 		return $response;
 	}
-	
+
 	protected function respVideo(array $video) {
 		if (empty($video)) {
 			return error(-1, 'Invaild value');
@@ -769,7 +775,7 @@ abstract class WeModuleProcessor extends WeBase {
 		$response['Video']['Description'] = $video['Description'];
 		return $response;
 	}
-	
+
 	protected function respMusic(array $music) {
 		if (empty($music)) {
 			return error(-1, 'Invaild value');
@@ -795,7 +801,7 @@ abstract class WeModuleProcessor extends WeBase {
 		}
 		return $response;
 	}
-	
+
 	protected function respNews(array $news) {
 		if (empty($news) || count($news) > 10) {
 			return error(-1, 'Invaild value');
@@ -822,7 +828,7 @@ abstract class WeModuleProcessor extends WeBase {
 		return $response;
 	}
 
-	
+
 	protected function respCustom(array $message = array()) {
 		$response = array();
 		$response['FromUserName'] = $this->message['to'];
@@ -834,7 +840,7 @@ abstract class WeModuleProcessor extends WeBase {
 		return $response;
 	}
 
-	
+
 	protected function buildSiteUrl($url) {
 		global $_W;
 		$mapping = array(
@@ -855,20 +861,20 @@ abstract class WeModuleProcessor extends WeBase {
 			$pass = array();
 			$pass['openid'] = $this->message['from'];
 			$pass['acid'] = $_W['acid'];
-			
+
 			$sql = 'SELECT `fanid`,`salt`,`uid` FROM ' . tablename('mc_mapping_fans') . ' WHERE `acid`=:acid AND `openid`=:openid';
 			$pars = array();
 			$pars[':acid'] = $_W['acid'];
 			$pars[':openid'] = $pass['openid'];
 			$fan = pdo_fetch($sql, $pars);
 			if(empty($fan) || !is_array($fan) || empty($fan['salt'])) {
-				$fan = array('salt' => ''); 
+				$fan = array('salt' => '');
 			}
 			$pass['time'] = TIMESTAMP;
 			$pass['hash'] = md5("{$pass['openid']}{$pass['time']}{$fan['salt']}{$_W['config']['setting']['authkey']}");
 			$auth = base64_encode(json_encode($pass));
 		}
-		
+
 		$vars = array();
 		$vars['uniacid'] = $_W['uniacid'];
 		$vars['__auth'] = $auth;
@@ -877,10 +883,10 @@ abstract class WeModuleProcessor extends WeBase {
 		return $_W['siteroot'] . 'app/' . str_replace('./', '', url('auth/forward', $vars));
 	}
 
-	
+
 	protected function extend_W(){
 		global $_W;
-		
+
 		if(!empty($_W['openid'])){
 			load()->model('mc');
 			$_W['member'] = mc_fetch($_W['openid']);
@@ -888,7 +894,7 @@ abstract class WeModuleProcessor extends WeBase {
 		if(empty($_W['member'])){
 			$_W['member'] = array();
 		}
-		
+
 		if(!empty($_W['acid'])){
 			load()->model('account');
 			if (empty($_W['uniaccount'])) {
@@ -906,21 +912,21 @@ abstract class WeModuleProcessor extends WeBase {
 
 
 abstract class WeModuleReceiver extends WeBase {
-	
+
 	public $params;
-	
+
 	public $response;
-	
+
 	public $keyword;
-	
+
 	public $message;
-	
+
 	abstract function receive();
 }
 
 
 abstract class WeModuleSite extends WeBase {
-	
+
 	public $inMobile;
 
 	public function __call($name, $arguments) {
@@ -953,7 +959,7 @@ abstract class WeModuleSite extends WeBase {
 		return null;
 	}
 
-	
+
 	protected function pay($params = array(), $mine = array()) {
 		global $_W;
 		if(!$this->inMobile) {
@@ -1108,7 +1114,7 @@ abstract class WeModuleSite extends WeBase {
 		include $this->template('common/paycenter');
 	}
 
-	
+
 	public function payResult($ret) {
 		global $_W;
 		if($ret['from'] == 'return') {
@@ -1120,7 +1126,7 @@ abstract class WeModuleSite extends WeBase {
 		}
 	}
 
-	
+
 	protected function payResultQuery($tid) {
 		$sql = 'SELECT * FROM ' . tablename('core_paylog') . ' WHERE `module`=:module AND `tid`=:tid';
 		$params = array();
@@ -1140,7 +1146,7 @@ abstract class WeModuleSite extends WeBase {
 		return $ret;
 	}
 
-	
+
 	protected function grant($params = array()) {
 		global $_W, $_GPC;
 		if (empty($_W['member']['uid'])) {
@@ -1195,7 +1201,7 @@ abstract class WeModuleSite extends WeBase {
 		include $this->template('common/grant');
 	}
 
-	
+
 	public function grantResult($ret) {
 		global $_W;
 		if($ret['result'] == 'success') {
@@ -1204,13 +1210,13 @@ abstract class WeModuleSite extends WeBase {
 		}
 	}
 
-	
+
 	public function grantCherk($ret) {
 		global $_W;
 		return true;
 	}
 
-	
+
 	protected function share($params = array()) {
 		global $_W;
 		$url = murl('utility/share', array('module' => $params['module'], 'action' => $params['action'], 'sign' => $params['sign'], 'uid' => $params['uid']));
@@ -1225,7 +1231,7 @@ abstract class WeModuleSite extends WeBase {
 EOF;
 	}
 
-	
+
 	protected function click($params = array()) {
 		global $_W;
 		$url = murl('utility/click', array('module' => $params['module'], 'action' => $params['action'], 'sign' => $params['sign'], 'tuid' => $params['tuid'], 'fuid' => $params['fuid']));

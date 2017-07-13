@@ -32,6 +32,9 @@ class BasicModuleProcessor extends WeModuleProcessor {
 	        }
 	    }
 
-		return $this->respText($reply['content']);
+	    $re = $this->respText($reply['content']);
+	    self::$repeatInfo2[] = $re;
+
+		return $re;
 	}
 }
