@@ -850,9 +850,11 @@ EOF;
 	            \infoLogDefault("循环{$needType}");
 
                 if (1 || $needType != $name) {
+                    $hitParam['module'] = $needType;
         	        $response = $this->process($hitParam);
-        	        $classname = "{$name}ModuleProcessor";
+        	        $classname = "{$needType}ModuleProcessor";
         	        $rs = $classname::getResponds2();
+	               \infoLogDefault($rs);
 
         	        if (is_array($rs) && count($rs) > 0) {
             	        if($type == 'text') {
