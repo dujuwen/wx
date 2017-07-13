@@ -262,7 +262,7 @@ class WeEngine {
 
             //重复推送
 			\infoLogDefault($hitParam);
-			$this->repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam);
+			$this->repeatPushMessage($pars, $message);
 			exit();
 		}
 		WeUtility::logging('waring', 'Request Failed');
@@ -592,13 +592,6 @@ EOF;
 			return $pars;
 		}
 
-		infoLogDefault('-------------');
-		infoLogDefault('-------------');
-		infoLogDefault('$keywords');
-		infoLogDefault($keywords);
-		infoLogDefault('-------------');
-		infoLogDefault('-------------');
-
 		foreach($keywords as $keyword) {
 			$params = array(
 				'message' => $message,
@@ -845,8 +838,30 @@ EOF;
 		exit($resp);
 	}
 
-	public function repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam) {
+// 	public function repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam) {
+	public function repeatPushMessage($pars, $message) {
 	    global $_W, $engine;
+
+	    foreach($pars as $par) {
+	        if(empty($par['module'])) {
+	            continue;
+	        }
+	        $par['message'] = $message;
+	        $response = $this->process($par);
+	        $repeatModule = '';
+	        if($this->isValidResponse($response)) {
+	            $hitParam = $par;
+	            if(!empty($par['keyword'])) {
+	                $hitKeyword = $par['keyword'];
+	            }
+	            $repeatModule = $par['module'];
+	        }
+            infoLogDefault('---xx---');
+            infoLogDefault($repeatModule);
+            infoLogDefault($response);
+	    }
+	    return ;
+
 
 	    $toUserOpenId = $engine->message['from'];
 	    $acc = WeiXinAccount::create($_W['acid']);
