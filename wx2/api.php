@@ -807,6 +807,7 @@ EOF;
 		$processor->rule = $param['rule'];
 		$processor->priority = intval($param['priority']);
 		$processor->inContext = $param['context'] === true;
+		infoLogDefault(__LINE__);
 		$response = $processor->respond();
 		if(empty($response)) {
 			return false;
