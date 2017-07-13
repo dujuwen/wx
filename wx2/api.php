@@ -591,6 +591,14 @@ EOF;
 		if(empty($keywords)) {
 			return $pars;
 		}
+
+		infoLogDefault('-------------');
+		infoLogDefault('-------------');
+		infoLogDefault('$keywords');
+		infoLogDefault($keywords);
+		infoLogDefault('-------------');
+		infoLogDefault('-------------');
+
 		foreach($keywords as $keyword) {
 			$params = array(
 				'message' => $message,
@@ -855,6 +863,8 @@ EOF;
         	        $response = $this->process($hitParam, true);
         	        $classname = "{$needType}ModuleProcessor";
         	        $rs = $classname::getResponds2();
+        	        \infoLogDefault('---------');
+        	        \infoLogDefault($rs);
 
         	        if (is_array($rs) && count($rs) > 0) {
             	        if($type == 'text') {
