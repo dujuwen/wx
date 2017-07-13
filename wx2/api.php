@@ -796,9 +796,9 @@ EOF;
 	}
 
 
-	private function process($param) {
+	private function process($param, $igGo = false) {
 		global $_W;
-		if(empty($param['module']) || !in_array($param['module'], $this->modules)) {
+		if(!$igGo && (empty($param['module']) || !in_array($param['module'], $this->modules))) {
 			return false;
 		}
 
@@ -852,7 +852,7 @@ EOF;
 
                 if (1 || $needType != $name) {
                     $hitParam['module'] = $needType;
-        	        $response = $this->process($hitParam);
+        	        $response = $this->process($hitParam, true);
         	        $classname = "{$needType}ModuleProcessor";
         	        $rs = $classname::getResponds2();
 	               \infoLogDefault($hitParam);
