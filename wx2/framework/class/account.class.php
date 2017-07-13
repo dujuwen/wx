@@ -355,16 +355,11 @@ class WeUtility {
 		static $file;
 		$classname = "{$name}ModuleProcessor";
 
-		infoLogDefault('djw');
-		infoLogDefault($classname);
-
 		if(!class_exists($classname)) {
 			$file = IA_ROOT . "/addons/{$name}/processor.php";
 			if(!is_file($file)) {
 				$file = IA_ROOT . "/framework/builtin/{$name}/processor.php";
 			}
-			infoLogDefault($file);
-
 			if(!is_file($file)) {
 				trigger_error('ModuleProcessor Definition File Not Found '.$file, E_USER_WARNING);
 				return null;

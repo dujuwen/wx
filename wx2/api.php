@@ -253,15 +253,15 @@ class WeEngine {
 			$type = isset($response['MsgType']) ? $response['MsgType'] : '';
 			if (! in_array($type, array('text', 'news', 'image'))) {
 			    \infoLogDefault('不在不在');
-			}
     			echo $resp;
+			}
 
 			ob_start();
 			$this->receive($hitParam, $hitKeyword, $response);
 			ob_end_clean();
 
             //重复推送
-			\infoLogDefault($hitParam);
+// 			\infoLogDefault($hitParam);
 			$this->repeatPushMessage($pars, $message);
 			exit();
 		}
@@ -842,49 +842,28 @@ EOF;
 	public function repeatPushMessage($pars, $message) {
 	    global $_W, $engine;
 
-	    foreach($pars as $par) {
-	        if(empty($par['module'])) {
-	            continue;
-	        }
-	        $par['message'] = $message;
-	        $response = $this->process($par);
-	        $repeatModule = '';
-	        if($this->isValidResponse($response)) {
-	            $hitParam = $par;
-	            if(!empty($par['keyword'])) {
-	                $hitKeyword = $par['keyword'];
-	            }
-	            $repeatModule = $par['module'];
-	        }
-            infoLogDefault('---xx---');
-            infoLogDefault($repeatModule);
-            infoLogDefault($response);
-	    }
-	    return ;
-
-
 	    $toUserOpenId = $engine->message['from'];
 	    $acc = WeiXinAccount::create($_W['acid']);
 	    $access_token = $acc->getAccessToken();
 	    $url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=' . $access_token;
 
-	    $type = isset($response['MsgType']) ? $response['MsgType'] : '';
-	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
+	    $allData = array();
+	    foreach($pars as $par) {
+	        if(empty($par['module'])) {
+	            continue;
+	        }
+	        $par['message'] = $message;
+            $allData[$par['module']] = $this->process($par);
+	    }
+
+	    if (count($allData)) {
 	        foreach (array('basic', 'news', 'images') as $needType) {
-	            \infoLogDefault("循环{$needType}");
-
-                if (1) {
-                    $hitParam['module'] = $needType;
-        	        $response = $this->process($hitParam, true);
-        	        $classname = "{$needType}ModuleProcessor";
-        	        $rs = $classname::getResponds2();
-        	        \infoLogDefault('---------');
-        	        \infoLogDefault($rs);
-
-        	        if (is_array($rs) && count($rs) > 0) {
-            	        if($type == 'text') {
-            	            //纯文本
-            	            foreach ($rs as $text) {
+	            if (isset($allData[$needType])) {
+	                $rs = $allData[$needType];
+	                $type = $rs['MsgType'];
+    	            if (is_array($rs) && count($rs) > 0) {
+                	        if($type == 'text') {
+                	            //纯文本
             	                $data = array(
             	                    'touser' => $toUserOpenId,
             	                    'msgtype' => 'text',
@@ -892,12 +871,9 @@ EOF;
             	                        'content' => '===='
             	                    )
             	                );
-            	                wxHttpsRequest2($url, str_replace('====', $text['Content'], json_encode($data)));
-            	                continue;
-            	            }
-            	        } else if($type == 'news') {
-            	            //图文消息
-            	            foreach ($rs as $news) {
+            	                wxHttpsRequest2($url, str_replace('====', $rs['Content'], json_encode($data)));
+                	        } else if($type == 'news') {
+                	            //图文消息
             	                $data = array(
             	                    'touser' => $toUserOpenId,
             	                    'msgtype' => 'news',
@@ -905,8 +881,8 @@ EOF;
             	                        'articles' => []
             	                    )
             	                );
-            	                if ($news) {
-            	                    $news = $news['Articles'];
+        	                    $news = $news['Articles'];
+        	                    if ($news) {
                 	                foreach ($news as $new) {
                     	                $data['news']['articles'][] = [
                     	                    'title' => $new['Title'],
@@ -915,13 +891,10 @@ EOF;
                     	                    'picurl' => $new['PicUrl']
                     	                ];
                 	                }
-                	                wxHttpsRequest2($url, json_encode($data));
-                	                continue;
-            	                }
-            	            }
-            	        } else if($type == 'image'){
-            	            //纯图片
-            	            foreach ($rs as $mediaId) {
+        	                    }
+            	                wxHttpsRequest2($url, json_encode($data));
+                	        } else if($type == 'image'){
+                	            //纯图片
             	                $data = array(
             	                    'touser' => $toUserOpenId,
             	                    'msgtype' => 'image',
@@ -929,14 +902,15 @@ EOF;
             	                        'media_id' => '===='
             	                    )
             	                );
-            	                wxHttpsRequest2($url, str_replace('====', $mediaId['Image']['MediaId'], json_encode($data)));
-            	                continue;
-            	            }
+            	                wxHttpsRequest2($url, str_replace('====', $rs['Image']['MediaId'], json_encode($data)));
+                	        }
             	        }
-        	        }
-                }
+	            }
 	        }
 	    }
+	    return ;
+
+
 // 	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
 // 	        $classname = "{$name}ModuleProcessor";
 // 	        $rs = $classname::getResponds();
