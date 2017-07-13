@@ -67,8 +67,5 @@ class NewsModuleProcessor extends WeModuleProcessor {
 	        }
 	        self::$repeatInfo[] = $news;
 	    }
-
-// 	    infoLogDefault('self::$repeatInfo');
-// 	    infoLogDefault(self::$repeatInfo);
 	}
 }

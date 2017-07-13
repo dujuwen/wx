@@ -253,16 +253,16 @@ class WeEngine {
 			$type = isset($response['MsgType']) ? $response['MsgType'] : '';
 			if (! in_array($type, array('text', 'news', 'image'))) {
 			    \infoLogDefault('不在不在');
-    			echo $resp;
 			}
+    			echo $resp;
 
 			ob_start();
 			$this->receive($hitParam, $hitKeyword, $response);
 			ob_end_clean();
 
             //重复推送
-			\infoLogDefault($response);
-			$this->repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam);
+// 			\infoLogDefault($hitParam);
+// 			$this->repeatPushMessage($response, $repeatModule, $hitKeyword, $hitParam);
 			exit();
 		}
 		WeUtility::logging('waring', 'Request Failed');
@@ -807,7 +807,6 @@ EOF;
 		$processor->rule = $param['rule'];
 		$processor->priority = intval($param['priority']);
 		$processor->inContext = $param['context'] === true;
-		infoLogDefault(__LINE__);
 		$response = $processor->respond();
 		if(empty($response)) {
 			return false;
@@ -856,10 +855,6 @@ EOF;
         	        $response = $this->process($hitParam, true);
         	        $classname = "{$needType}ModuleProcessor";
         	        $rs = $classname::getResponds2();
-	               \infoLogDefault($hitParam);
-	               \infoLogDefault($response);
-	               \infoLogDefault($classname);
-	               \infoLogDefault($rs);
 
         	        if (is_array($rs) && count($rs) > 0) {
             	        if($type == 'text') {

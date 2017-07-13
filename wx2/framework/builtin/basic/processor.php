@@ -5,9 +5,6 @@ defined('IN_IA') or exit('Access Denied');
 class BasicModuleProcessor extends WeModuleProcessor {
 
 	public function respond() {
-	    infoLogDefault(__FUNCTION__);
-	    infoLogDefault("{$this->rule}");
-
 		$sql = "SELECT * FROM " . tablename('basic_reply') . " WHERE `rid` IN ({$this->rule})  ORDER BY RAND() LIMIT 1";
 		$reply = pdo_fetch($sql);
 		if (empty($reply)) {
