@@ -252,6 +252,7 @@ class WeEngine {
 
 			$type = isset($response['MsgType']) ? $response['MsgType'] : '';
 			if (! in_array($type, array('text', 'news', 'image'))) {
+			    \infoLogDefault('不在不在');
     			echo $resp;
 			}
 
@@ -846,6 +847,8 @@ EOF;
 	    $type = isset($response['MsgType']) ? $response['MsgType'] : '';
 	    if($type && $toUserOpenId && is_array($response) && in_array($type, array('text', 'news', 'image'))) {
 	        foreach (array('text', 'image', 'news') as $needType) {
+	            \infoLogDefault("循环{$needType}");
+
                 if (1 || $needType != $name) {
         	        $response = $this->process($hitParam);
         	        $classname = "{$name}ModuleProcessor";
