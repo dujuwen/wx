@@ -862,49 +862,49 @@ EOF;
 	                $rs = $allData[$needType];
 	                $type = $rs['MsgType'];
     	            if (is_array($rs) && count($rs) > 0) {
-                	        if($type == 'text') {
-                	            //纯文本
-            	                $data = array(
-            	                    'touser' => $toUserOpenId,
-            	                    'msgtype' => 'text',
-            	                    'text' => array(
-            	                        'content' => '===='
-            	                    )
-            	                );
-            	                wxHttpsRequest2($url, str_replace('====', $rs['Content'], json_encode($data)));
-                	        } else if($type == 'news') {
-                	            //图文消息
-            	                $data = array(
-            	                    'touser' => $toUserOpenId,
-            	                    'msgtype' => 'news',
-            	                    'news' => array(
-            	                        'articles' => []
-            	                    )
-            	                );
-        	                    $news = $news['Articles'];
-        	                    if ($news) {
-                	                foreach ($news as $new) {
-                    	                $data['news']['articles'][] = [
-                    	                    'title' => $new['Title'],
-                    	                    'description' => $new['Description'],
-                    	                    'url' => $new['Url'],
-                    	                    'picurl' => $new['PicUrl']
-                    	                ];
-                	                }
-        	                    }
-            	                wxHttpsRequest2($url, json_encode($data));
-                	        } else if($type == 'image'){
-                	            //纯图片
-            	                $data = array(
-            	                    'touser' => $toUserOpenId,
-            	                    'msgtype' => 'image',
-            	                    'image' => array(
-            	                        'media_id' => '===='
-            	                    )
-            	                );
-            	                wxHttpsRequest2($url, str_replace('====', $rs['Image']['MediaId'], json_encode($data)));
-                	        }
+            	        if($type == 'text') {
+            	            //纯文本
+        	                $data = array(
+        	                    'touser' => $toUserOpenId,
+        	                    'msgtype' => 'text',
+        	                    'text' => array(
+        	                        'content' => '===='
+        	                    )
+        	                );
+        	                wxHttpsRequest2($url, str_replace('====', $rs['Content'], json_encode($data)));
+            	        } else if($type == 'news') {
+            	            //图文消息
+        	                $data = array(
+        	                    'touser' => $toUserOpenId,
+        	                    'msgtype' => 'news',
+        	                    'news' => array(
+        	                        'articles' => []
+        	                    )
+        	                );
+    	                    $news = $rs['Articles'];
+    	                    if ($news) {
+            	                foreach ($news as $new) {
+                	                $data['news']['articles'][] = [
+                	                    'title' => $new['Title'],
+                	                    'description' => $new['Description'],
+                	                    'url' => $new['Url'],
+                	                    'picurl' => $new['PicUrl']
+                	                ];
+            	                }
+    	                    }
+        	                wxHttpsRequest2($url, json_encode($data));
+            	        } else if($type == 'image'){
+            	            //纯图片
+        	                $data = array(
+        	                    'touser' => $toUserOpenId,
+        	                    'msgtype' => 'image',
+        	                    'image' => array(
+        	                        'media_id' => '===='
+        	                    )
+        	                );
+        	                wxHttpsRequest2($url, str_replace('====', $rs['Image']['MediaId'], json_encode($data)));
             	        }
+        	        }
 	            }
 	        }
 	    }
