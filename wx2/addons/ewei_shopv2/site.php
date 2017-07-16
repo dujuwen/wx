@@ -19,7 +19,6 @@ class Ewei_shopv2ModuleSite extends WeModuleSite
 
 	public function doWebWeb()
 	{
-	    infoLogDefault(m('route'));
 		m('route')->run();
 	}
 
