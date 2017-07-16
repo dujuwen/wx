@@ -165,6 +165,10 @@ if(!in_array($action, $actions)) {
 $_W['page'] = array();
 $_W['page']['copyright'] = $_W['setting']['copyright'];
 
+infoLogDefault($action);
+infoLogDefault($controller);
+infoLogDefault($acl);
+
 if(is_array($acl[$controller]['direct']) && in_array($action, $acl[$controller]['direct'])) {
 		require _forward($controller, $action);
 	exit;
