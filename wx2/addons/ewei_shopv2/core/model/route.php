@@ -181,6 +181,8 @@ class Route_EweiShopV2Model
 		$GLOBALS['_S'] = $_W['shopset'] = $global_set;
 		include $file;
 		$class = ucfirst($class) . '_EweiShopV2Page';
+		infoLogDefault($class);
+		infoLogDefault($method);
 		$instance = new $class();
 
 		if (!method_exists($instance, $method)) {
