@@ -250,9 +250,7 @@ class WeEngine {
 			$resp = str_replace(array_keys($mapping), array_values($mapping), $resp);
 			ob_start();
 
-			$type = isset($response['MsgType']) ? $response['MsgType'] : '';
-			if (! in_array($type, array('text', 'news', 'image'))) {
-			    \infoLogDefault('不在不在');
+			if (! in_array($repeatModule, array('basic', 'images', 'news'))) {
     			echo $resp;
 			}
 
