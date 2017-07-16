@@ -901,7 +901,6 @@ if (!(function_exists('webUrl')))
 		{
 			return $_W['siteroot'] . 'web/' . substr(wurl('site/entry', $query), 2);
 		}
-		infoLogDefault('sss111ss');
 		return wurl('site/entry', $query);
 	}
 }

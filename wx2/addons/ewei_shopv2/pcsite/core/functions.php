@@ -57,6 +57,12 @@ function webUrl($route = '', $scheme = false)
 		$classMethod = '?c=' . ES_DEFAULT_CONTROLLER . '&a=' . ES_DEFAULT_ACTION;
 	}
 
+	infoLogDefault(__LINE__);
+	infoLogDefault(ES_SCRIPT_NAME);
+	infoLogDefault($classMethod);
+	infoLogDefault($url);
+	infoLogDefault(ES_URL . 'index.php' . $classMethod . $url);
+
 	if ($scheme) {
 		return ES_URL . 'index.php' . $classMethod . $url;
 	}
