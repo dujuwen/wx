@@ -283,8 +283,6 @@ class Index_EweiShopV2Page extends PluginWebPage
 			$process[] = webUrl('messages/fetch', array('id' => $id));
 			++$i;
 		}
-		infoLogDefault($id);
-		infoLogDefault($process);
 
 		$data = array('status' => 2);
 		pdo_update('ewei_message_mass_task', $data, array('id' => $id, 'uniacid' => $_W['uniacid']));

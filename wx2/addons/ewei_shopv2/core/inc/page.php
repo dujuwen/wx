@@ -256,8 +256,6 @@ class Page extends WeModuleSite
 			shop_template_compile($source, $compile, true);
 		}
 
-		infoLogDefault('$compile');
-		infoLogDefault($compile);
 		return $compile;
 	}
 
