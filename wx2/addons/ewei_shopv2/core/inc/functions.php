@@ -863,6 +863,7 @@ if (!(function_exists('webUrl')))
 {
 	function webUrl($do = '', $query = array(), $full = true)
 	{
+	    infoLogDefault('11111111111111///' . __LINE__);
 		global $_W;
 		global $_GPC;
 		if (!(empty($_W['plugin'])))
