@@ -18,7 +18,6 @@ function es_empty()
 
 function webUrl($route = '', $scheme = false)
 {
-    infoLogDefault('2222222///' . __LINE__);
 	if (is_array($route)) {
 		if (strncmp($route[0], '/', 1) === 0) {
 			ltrim($route[0], '/');
