@@ -435,6 +435,7 @@ class Index_EweiShopV2Page extends PluginWebPage
 		if (strpos($picurl, 'images/') != false) {
     		$isMassPic = false;
 		}
+	    infoLogDefault($isMassPic);
 
 		if ($isMassPic) {
     		$result = m('message')->sendMassPicNews($openid, $picurl);
