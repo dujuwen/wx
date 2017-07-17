@@ -431,9 +431,9 @@ class Index_EweiShopV2Page extends PluginWebPage
 		global $_W;
 		$result = false;
     	//$isMassPic是否是群发图片
-		$isMassPic = false;
+	    $isMassPic = true;
 		if (strpos($picurl, 'images/') != false) {
-		    $isMassPic = true;
+    		$isMassPic = false;
 		}
 
 		if ($isMassPic) {
