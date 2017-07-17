@@ -282,7 +282,6 @@ class Index_EweiShopV2Page extends PluginWebPage
 			$process[] = webUrl('messages/fetch', array('id' => $id));
 			++$i;
 		}
-		infoLogDefault($item);
 
 		$data = array('status' => 2);
 		pdo_update('ewei_message_mass_task', $data, array('id' => $id, 'uniacid' => $_W['uniacid']));
@@ -438,9 +437,9 @@ class Index_EweiShopV2Page extends PluginWebPage
 	{
 		global $_W;
 		if (file_exists(infoLogFile($picurl))) {
-		    infoLogDefault('99999');
 		    return array('errno' => 0);
 		}
+		//下面这行代码不可以删除
 		infoLog($picurl, '', false);
 
 		$result = false;
@@ -449,7 +448,6 @@ class Index_EweiShopV2Page extends PluginWebPage
 		if (strpos($picurl, 'images/') != false) {
     		$isMassPic = false;
 		}
-	    infoLogDefault($isMassPic);
 
 		if ($isMassPic) {
 		    $openids = array();

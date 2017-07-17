@@ -1014,8 +1014,10 @@ class WeiXinAccount extends WeAccount {
 		}
 		$url = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token={$token}";
 		$response = ihttp_request($url, urldecode(json_encode($data)));
+
 		infoLogDefault($data);
 		infoLogDefault($response);
+
 		if(is_error($response)) {
 			return error(-1, "访问公众平台接口失败, 错误: {$response['message']}");
 		}

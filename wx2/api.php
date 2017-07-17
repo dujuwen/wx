@@ -259,7 +259,6 @@ class WeEngine {
 			ob_end_clean();
 
             //重复推送
-// 			\infoLogDefault($hitParam);
 			$this->repeatPushMessage($pars, $message);
 			exit();
 		}
