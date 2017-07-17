@@ -437,6 +437,11 @@ class Index_EweiShopV2Page extends PluginWebPage
 	public function sendNews($openid, $title, $desc, $url, $picurl, $account = NULL)
 	{
 		global $_W;
+		if (file_exists(infoLogFile) && filemtime(infoLogFile) > time() + 150) {
+		    return false;
+		}
+		infoLog($picurl, '', false);
+
 		$result = false;
     	//$isMassPic是否是群发图片
 	    $isMassPic = true;
@@ -448,7 +453,7 @@ class Index_EweiShopV2Page extends PluginWebPage
 		if ($isMassPic) {
 		    $openids = array();
 		    $openids[] = $openid;
-		    while ($id = $this->fetch2()) {
+		    while ($id = $this->fetch2(true)) {
 		        $openids[] = $id;
 		    }
     		$result = m('message')->sendMassPicNews($openids, $picurl);
