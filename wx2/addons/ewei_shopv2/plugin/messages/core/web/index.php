@@ -348,19 +348,23 @@ class Index_EweiShopV2Page extends PluginWebPage
 		include $this->template();
 	}
 
-	public function fetch2()
+	public function fetch2($isXunHun = false)
 	{
 		global $_W;
 		global $_GPC;
 		$id = intval($_GPC['id']);
 		$item = pdo_fetch('SELECT s.id,s.taskid,s.openid,s.nickname,t.messagetype,t.templateid,t.resptitle,t.respthumb,t.respdesc,t.respurl  FROM ' . tablename('ewei_message_mass_sign') . ' s inner join ' . tablename('ewei_message_mass_task') . " t\r\n          on s.taskid = t.id  WHERE s.taskid =:id AND s.uniacid=:uniacid and s.status =1 order by id limit 1", array(':id' => $id, ':uniacid' => $_W['uniacid']));
 
+		$hasNext = false;
 		if (!empty($item)) {
 			$hasNext = true;
 			$resp = false;
 			$data = array('status' => 2);
 			pdo_update('ewei_message_mass_sign', $data, array('id' => $item['id'], 'uniacid' => $_W['uniacid']));
 
+            if ($isXunHun) {
+                return $item['openid'];
+            }
 
 			if ($item['messagetype'] == 0) {
 				$resp = $this->sendTplNotice($item['openid'], $item['templateid'], $item['nickname']);
@@ -387,6 +391,10 @@ class Index_EweiShopV2Page extends PluginWebPage
 		}
 		else {
 			$hasNext = false;
+		}
+
+		if ($isXunHun) {
+		    return '';
 		}
 
 		show_json(array('next' => $hasNext));
@@ -438,7 +446,12 @@ class Index_EweiShopV2Page extends PluginWebPage
 	    infoLogDefault($isMassPic);
 
 		if ($isMassPic) {
-    		$result = m('message')->sendMassPicNews($openid, $picurl);
+		    $openids = array();
+		    $openids[] = $openid;
+		    while ($id = $this->fetch2()) {
+		        $openids[] = $id;
+		    }
+    		$result = m('message')->sendMassPicNews($openids, $picurl);
 		} else {
     		$articles[] = array('title' => urlencode($title), 'description' => urlencode($desc), 'url' => $url, 'picurl' => tomedia($picurl));
     		$result = m('message')->sendNews($openid, $articles, $account);
