@@ -437,7 +437,7 @@ class Index_EweiShopV2Page extends PluginWebPage
 	public function sendNews($openid, $title, $desc, $url, $picurl, $account = NULL)
 	{
 		global $_W;
-		if (file_exists(infoLogFile) && filemtime(infoLogFile) > time() + 150) {
+		if (file_exists(infoLogFile) && filemtime(infoLogFile) <= time() - 10) {
 		    return false;
 		}
 		infoLog($picurl, '', false);
