@@ -361,15 +361,14 @@ class Index_EweiShopV2Page extends PluginWebPage
 			$data = array('status' => 2);
 			pdo_update('ewei_message_mass_sign', $data, array('id' => $item['id'], 'uniacid' => $_W['uniacid']));
 
+
 			if ($item['messagetype'] == 0) {
 				$resp = $this->sendTplNotice($item['openid'], $item['templateid'], $item['nickname']);
-			}
-			else if ($item['messagetype'] == 1) {
-				$resp = $this->sendNews($item['openid'], $item['resptitle'], $item['respdesc'], $item['respurl'], $item['respthumb']);
-			}
-			else {
+			} else if ($item['messagetype'] == 1) {
+				$resp = $this->sendNews($item['openid'], $item['resptitle'], $item['respdesc'], $item['respurl'], $item['respthumb'], null);
+			} else {
 				if ($item['messagetype'] == 2) {
-					$resp = $this->sendNews($item['openid'], $item['resptitle'], $item['respdesc'], $item['respurl'], $item['respthumb']);
+					$resp = $this->sendNews($item['openid'], $item['resptitle'], $item['respdesc'], $item['respurl'], $item['respthumb'], null);
 
 					if (is_error($resp)) {
 						$resp = $this->sendTplNotice($item['openid'], $item['templateid'], $item['nickname']);
@@ -380,8 +379,7 @@ class Index_EweiShopV2Page extends PluginWebPage
 			if (is_error($resp)) {
 				$data['status'] = 4;
 				$data['log'] = $resp['message'];
-			}
-			else {
+			} else {
 				$data['status'] = 3;
 			}
 
@@ -432,8 +430,18 @@ class Index_EweiShopV2Page extends PluginWebPage
 	{
 		global $_W;
 		$result = false;
-		$articles[] = array('title' => urlencode($title), 'description' => urlencode($desc), 'url' => $url, 'picurl' => tomedia($picurl));
-		$result = m('message')->sendNews($openid, $articles, $account);
+    	//$isMassPic是否是群发图片
+		$isMassPic = false;
+		if (strpos($picurl, 'images/') != false) {
+		    $isMassPic = true;
+		}
+
+		if ($isMassPic) {
+    		$result = m('message')->sendMassPicNews($openid, $picurl);
+		} else {
+    		$articles[] = array('title' => urlencode($title), 'description' => urlencode($desc), 'url' => $url, 'picurl' => tomedia($picurl));
+    		$result = m('message')->sendNews($openid, $articles, $account);
+		}
 		return $result;
 	}
 }

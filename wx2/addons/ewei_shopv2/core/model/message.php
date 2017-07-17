@@ -53,17 +53,17 @@ class Message_EweiShopV2Model
 		}
 
 		return $account->sendCustomNotice(array(
-	'touser'  => $openid,
-	'msgtype' => 'text',
-	'text'    => array('content' => urlencode($content))
-	));
+        	'touser'  => $openid,
+        	'msgtype' => 'text',
+        	'text'    => array('content' => urlencode($content))
+    	));
 	}
 
 	/**
      * 发送图片
      * @param type $openid
      * @param type $mediaid
-     * @return type 
+     * @return type
      */
 	public function sendImage($openid, $mediaid)
 	{
@@ -82,10 +82,23 @@ class Message_EweiShopV2Model
 		}
 
 		return $account->sendCustomNotice(array(
-	'touser'  => $openid,
-	'msgtype' => 'news',
-	'news'    => array('articles' => $articles)
-	));
+        	'touser'  => $openid,
+        	'msgtype' => 'news',
+        	'news'    => array('articles' => $articles)
+    	));
+	}
+
+	public function sendMassPicNews($openid, $mediaId, $account = NULL)
+	{
+		if (!$account) {
+			$account = m('common')->getAccount();
+		}
+
+		return $account->sendMassPic(array(
+        	'touser'  => $openid,
+        	'msgtype' => 'image',
+        	'image'   => array('media_id' => $mediaId)
+    	));
 	}
 
 	public function sendTexts($openid, $content, $url = '', $account = NULL)

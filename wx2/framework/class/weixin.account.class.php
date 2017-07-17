@@ -988,7 +988,31 @@ class WeiXinAccount extends WeAccount {
 			return $token;
 		}
 		$url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={$token}";
-		infoLogDefault($data);
+		$response = ihttp_request($url, urldecode(json_encode($data)));
+		if(is_error($response)) {
+			return error(-1, "访问公众平台接口失败, 错误: {$response['message']}");
+		}
+		$result = @json_decode($response['content'], true);
+		if(empty($result)) {
+			return error(-1, "接口调用失败, 元数据: {$response['meta']}");
+		} elseif(!empty($result['errcode'])) {
+			return error(-1, "访问微信接口错误, 错误代码: {$result['errcode']}, 错误信息: {$result['errmsg']},错误详情：{$this->error_code($result['errcode'])}");
+		}
+		return $result;
+	}
+
+	//https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1481187827_i0l21
+	//根据OpenID列表群发【订阅号不可用，服务号认证后可用】
+	//群发图片
+	public function sendMassPic($data) {
+		if(empty($data)) {
+			return error(-1, '参数错误');
+		}
+		$token = $this->getAccessToken();
+		if(is_error($token)){
+			return $token;
+		}
+		$url = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token={$token}";
 		$response = ihttp_request($url, urldecode(json_encode($data)));
 		if(is_error($response)) {
 			return error(-1, "访问公众平台接口失败, 错误: {$response['message']}");
