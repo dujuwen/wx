@@ -439,7 +439,7 @@ class Index_EweiShopV2Page extends PluginWebPage
 		if (file_exists(infoLogFile($picurl))) {
 		    return array('errno' => 0);
 		}
-		下面这行代码不可以删除
+		//下面这行代码不可以删除
 		infoLog($picurl, '', false);
 
 		$result = false;
