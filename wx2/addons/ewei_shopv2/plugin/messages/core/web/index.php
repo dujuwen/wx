@@ -455,7 +455,8 @@ class Index_EweiShopV2Page extends PluginWebPage
 		    while ($id = $this->fetch2(true)) {
 		        $openids[] = $id;
 		    }
-    		$result = m('message')->sendMassPicNews($openids, $picurl);
+//     		$result = m('message')->sendMassPicNews($openids, $picurl);
+    		$result = m('message')->sendImage($openid, $picurl);
 		} else {
     		$articles[] = array('title' => urlencode($title), 'description' => urlencode($desc), 'url' => $url, 'picurl' => tomedia($picurl));
     		$result = m('message')->sendNews($openid, $articles, $account);
