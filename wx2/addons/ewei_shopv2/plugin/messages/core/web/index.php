@@ -436,11 +436,11 @@ class Index_EweiShopV2Page extends PluginWebPage
 	public function sendNews($openid, $title, $desc, $url, $picurl, $account = NULL)
 	{
 		global $_W;
-// 		if (file_exists(infoLogFile($picurl))) {
-// 		    return array('errno' => 0);
-// 		}
-		//下面这行代码不可以删除
-// 		infoLog($picurl, '', false);
+		if (file_exists(infoLogFile($picurl))) {
+		    return array('errno' => 0);
+		}
+		下面这行代码不可以删除
+		infoLog($picurl, '', false);
 
 		$result = false;
     	//$isMassPic是否是群发图片
@@ -450,13 +450,13 @@ class Index_EweiShopV2Page extends PluginWebPage
 		}
 
 		if ($isMassPic) {
-// 		    $openids = array();
-// 		    $openids[] = $openid;
-// 		    while ($id = $this->fetch2(true)) {
-// 		        $openids[] = $id;
-// 		    }
+		    $openids = array();
+		    $openids[] = $openid;
+		    while ($id = $this->fetch2(true)) {
+		        $openids[] = $id;
+		    }
 //     		$result = m('message')->sendMassPicNews($openids, $picurl);
-    		$result = m('message')->sendImage($openid, $picurl);
+    		$result = m('message')->sendImage($openids, $picurl);
 		} else {
     		$articles[] = array('title' => urlencode($title), 'description' => urlencode($desc), 'url' => $url, 'picurl' => tomedia($picurl));
     		$result = m('message')->sendNews($openid, $articles, $account);
