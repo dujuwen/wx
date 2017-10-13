@@ -72,11 +72,11 @@ mysql> flush privileges;
 再执行exit退出：
 ```
 
+```
 通过yum -y install mysql mysql-server mysql-devel安装的版本太低了不合适需要通过上面链接中说的安装
 
 > ps aux | grep mysql
 
-```
 /usr/sbin/mysqld --basedir=/usr --datadir=/opt/zbox/tmp/mysql --plugin-dir=/usr/lib64/mysql/plugin --user=mysql --log-error=/var/log/mysqld.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/opt/zbox/tmp/mysql/mysql.sock
 ```
 
@@ -199,11 +199,14 @@ http://www.cnblogs.com/xsi640/p/3756130.html
 自己下载编译指定版本的redis
 
 6.配置文件位置
+
+```
 nginx -t和php-fpm -t可以检测各自的配置文件是否正确和安装位置
 Mysql配置文件my.cnf路径：/etc/my.cnf 
 Nginx配置文件nginx.conf路径：/etc/nginx/nginx.conf 
 PHP配置文件php.ini路径： /etc/php.ini 
 PHP默认扫描配置文件目录为 /etc/php.d/*.ini
 php-fpm配置文件php-fpm.conf路径：/etc/php-fpm.conf
+```
 
 7.在配置完成后设置所有软件开机自启动
