@@ -33,25 +33,25 @@ grep -i意思是不区分大小写
 > yum -y remove xxx
 
 查看是否生成了mysqld服务, 并设置随机启动
-# chkconfig --list |grep mysql 
+> chkconfig --list |grep mysql 
 
 查看占用端口，默认占用3306端口
-# netstat -nutlp | grep mysql
+> netstat -nutlp | grep mysql
 
 执行如下命令进行重启，两种方法都可以:
-# /etc/init.d/mysqld restart
-# service mysqld restart
+> /etc/init.d/mysqld restart
+> service mysqld restart
 
 执行如下命令进行停止，两种方法都可以:
-# /etc/init.d/mysqld stop   
-# service mysqld stop
+> /etc/init.d/mysqld stop   
+> service mysqld stop
 
 
 进入数据库修改用户密码
 以安全方式启动mysql:
-#/usr/bin/mysqld_safe --skip-grant-tables >/dev/null 2>&1 &
+> /usr/bin/mysqld_safe --skip-grant-tables >/dev/null 2>&1 &
 稍等5秒钟，然后执行以下语句：
-#/usr/bin/mysql -u root mysql
+> /usr/bin/mysql -u root mysql
 出现“mysql>”提示符后进入MySQL命令行环境，输入：
 > use mysql;
 mysql> update user set password = Password(’123456’) where User = 'root';
@@ -80,19 +80,19 @@ http://blog.csdn.net/zhaozuosui/article/details/48394409
 > yum search php56
 
 安装php5.6
-# yum install --enablerepo=remi --enablerepo=remi-php56 php php-fpm php-devel php-opcache php-mbstring php-mcrypt php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pecl-redis php-pdo php-cli php-pecl-apcu php-common php-xml php-pear php-pecl-amqp php-bcmath php-process php-gd
+> yum install --enablerepo=remi --enablerepo=remi-php56 php php-fpm php-devel php-opcache php-mbstring php-mcrypt php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pecl-redis php-pdo php-cli php-pecl-apcu php-common php-xml php-pear php-pecl-amqp php-bcmath php-process php-gd
 
 检查配置
-# php-fpm -t
-# php --ini
+> php-fpm -t
+> php --ini
 
 确保安装了必要的php模块
-# php -m | grep -i openssl
-# php -m | grep -i redis
+> php -m | grep -i openssl
+> php -m | grep -i redis
 
 4.安装nginx
-# yum install nginx
-# nginx -t
+> yum install nginx
+> nginx -t
 
 centos6.5环境
 修改nginx配置文件后，重启报错：
@@ -172,7 +172,7 @@ location / {
 在 CentOS 6 系统上:
 1. $ sudo service nginx restart
 2. $ sudo service php-fpm restart 
-# curl http://localhost/index.php
+> curl http://localhost/index.php
 看看是否正常执行
 
 5.安装redis
