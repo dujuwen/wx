@@ -51,12 +51,15 @@ grep -i意思是不区分大小写
 ```
 
 进入数据库修改用户密码
+```
 以安全方式启动mysql:
 > /usr/bin/mysqld_safe --skip-grant-tables >/dev/null 2>&1 &
 稍等5秒钟，然后执行以下语句：
 > /usr/bin/mysql -u root mysql
-出现"mysql>"提示符后进入MySQL命令行环境，输入：
 ```
+
+```
+出现"mysql>"提示符后进入MySQL命令行环境，输入：
 > use mysql;
 mysql> update user set password = Password(’123456’) where User = 'root';
 回车后执行(刷新MySQL系统权限相关的表)：
@@ -79,6 +82,8 @@ mysql> flush privileges;
 
 3.安装php(php-fpm)
 http://blog.csdn.net/zhaozuosui/article/details/48394409
+
+```
 先看看有没有安装php:
 > yum list installed | grep -i php
 如果有安装包可以先删除它们(如果需要删除的话)
@@ -88,7 +93,6 @@ http://blog.csdn.net/zhaozuosui/article/details/48394409
 > yum search php56
 
 安装php5.6
-```
 > yum install --enablerepo=remi --enablerepo=remi-php56 php php-fpm php-devel php-opcache php-mbstring php-mcrypt php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pecl-redis php-pdo php-cli php-pecl-apcu php-common php-xml php-pear php-pecl-amqp php-bcmath php-process php-gd
 ```
 
@@ -178,6 +182,8 @@ location / {
 放入内容:<?php phpinfo(); ?>
 
 启动或重启nginx和php-fpm来测试:
+
+```
 在 CentOS 7 系统上:
 > $ sudo systemctl restart nginx
 > $ sudo systemctl restart php-fpm 
@@ -186,6 +192,7 @@ location / {
 > $ sudo service php-fpm restart 
 > curl http://localhost/index.php
 看看是否正常执行
+```
 
 5.安装redis
 http://www.cnblogs.com/xsi640/p/3756130.html
