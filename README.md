@@ -1,4 +1,6 @@
 # 安装lnmp环境
+windows下ssh登录工具：Cygwin，Xshell
+
 服务器部署(centos系统)
 
 如何查看linux系统的发行版本信息?
