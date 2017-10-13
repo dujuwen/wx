@@ -182,15 +182,13 @@ location / {
         location = /50x.html {
     }
 }
-```
+
 
 在/usr/share/nginx/html下新建文件index.php
+放入内容:
+<?php phpinfo(); ?>
+启动或重启nginx和php-fpm来测试
 
-放入内容:<?php phpinfo(); ?>
-
-启动或重启nginx和php-fpm来测试:
-
-```
 在 CentOS 7 系统上:
 > $ sudo systemctl restart nginx
 > $ sudo systemctl restart php-fpm 
@@ -202,6 +200,7 @@ location / {
 ```
 
 5.安装redis
+
 http://www.cnblogs.com/xsi640/p/3756130.html
 
 自己下载编译指定版本的redis
