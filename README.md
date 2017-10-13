@@ -102,10 +102,12 @@ http://blog.csdn.net/zhaozuosui/article/details/48394409
 
 检查配置
 > php-fpm -t
+
 > php --ini
 
 确保安装了必要的php模块
 > php -m | grep -i openssl
+
 > php -m | grep -i redis
 
 4.安装nginx
@@ -183,6 +185,7 @@ location / {
 ```
 
 在/usr/share/nginx/html下新建文件index.php
+
 放入内容:<?php phpinfo(); ?>
 
 启动或重启nginx和php-fpm来测试:
@@ -200,6 +203,7 @@ location / {
 
 5.安装redis
 http://www.cnblogs.com/xsi640/p/3756130.html
+
 自己下载编译指定版本的redis
 
 6.配置文件位置
