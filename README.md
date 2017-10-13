@@ -27,6 +27,7 @@ ls -l /etc/yum.repos.d
 
 2.安装mysql
 centos6.5安装mysql:https://segmentfault.com/a/1190000007667534
+```
 先看看有没有安装mysql
 grep -i意思是不区分大小写
 > rpm -qa | grep -i mysql
@@ -47,14 +48,15 @@ grep -i意思是不区分大小写
 执行如下命令进行停止，两种方法都可以:
 > /etc/init.d/mysqld stop   
 > service mysqld stop
-
+```
 
 进入数据库修改用户密码
 以安全方式启动mysql:
 > /usr/bin/mysqld_safe --skip-grant-tables >/dev/null 2>&1 &
 稍等5秒钟，然后执行以下语句：
 > /usr/bin/mysql -u root mysql
-出现“mysql>”提示符后进入MySQL命令行环境，输入：
+出现"mysql>"提示符后进入MySQL命令行环境，输入：
+```
 > use mysql;
 mysql> update user set password = Password(’123456’) where User = 'root';
 回车后执行(刷新MySQL系统权限相关的表)：
@@ -65,11 +67,15 @@ mysql> select current_user;
 
 mysql> flush privileges;
 再执行exit退出：
+```
 
 通过yum -y install mysql mysql-server mysql-devel安装的版本太低了不合适需要通过上面链接中说的安装
 
 > ps aux | grep mysql
+
+```
 /usr/sbin/mysqld --basedir=/usr --datadir=/opt/zbox/tmp/mysql --plugin-dir=/usr/lib64/mysql/plugin --user=mysql --log-error=/var/log/mysqld.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/opt/zbox/tmp/mysql/mysql.sock
+```
 
 3.安装php(php-fpm)
 http://blog.csdn.net/zhaozuosui/article/details/48394409
@@ -82,7 +88,9 @@ http://blog.csdn.net/zhaozuosui/article/details/48394409
 > yum search php56
 
 安装php5.6
+```
 > yum install --enablerepo=remi --enablerepo=remi-php56 php php-fpm php-devel php-opcache php-mbstring php-mcrypt php-mysqlnd php-pecl-xdebug php-phpunit-PHPUnit php-pecl-redis php-pdo php-cli php-pecl-apcu php-common php-xml php-pear php-pecl-amqp php-bcmath php-process php-gd
+```
 
 检查配置
 > php-fpm -t
@@ -93,6 +101,7 @@ http://blog.csdn.net/zhaozuosui/article/details/48394409
 > php -m | grep -i redis
 
 4.安装nginx
+```
 > yum install nginx
 > nginx -t
 
@@ -163,17 +172,18 @@ location / {
         location = /50x.html {
     }
 }
+```
 
 在/usr/share/nginx/html下新建文件index.php
 放入内容:<?php phpinfo(); ?>
 
 启动或重启nginx和php-fpm来测试:
 在 CentOS 7 系统上:
-1. $ sudo systemctl restart nginx
-2. $ sudo systemctl restart php-fpm 
+> $ sudo systemctl restart nginx
+> $ sudo systemctl restart php-fpm 
 在 CentOS 6 系统上:
-1. $ sudo service nginx restart
-2. $ sudo service php-fpm restart 
+> $ sudo service nginx restart
+> $ sudo service php-fpm restart 
 > curl http://localhost/index.php
 看看是否正常执行
 
