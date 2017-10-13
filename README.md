@@ -16,9 +16,13 @@ LSB = Linux Standard Base(linux标准库)
 
 在安装之前确认先yum search xx看看有没有需要的版本工具，没有的话还要添加扩展源
 > http://blog.csdn.net/haitun312366/article/details/8511412
+
 > 可以先配置安装源
+
 > 查看源库
+
 > ls -l /etc/yum.repos.d
+
 
 以下操作可能需要sudo权限
 
