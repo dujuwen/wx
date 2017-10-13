@@ -2,6 +2,7 @@
 服务器部署(centos系统)
 
 如何查看linux系统的发行版本信息?
+```
 1.可以使用lsb_release命令来查看,没有这个命令的话可以安装。在centos可以通过yum -y install来安装lsb_release命令
 LSB = Linux Standard Base(linux标准库)
 > lsb_release -a
@@ -11,6 +12,7 @@ LSB = Linux Standard Base(linux标准库)
 > uname -a
 4.获取linux内核信息
 > cat /proc/version
+```
 
 在安装之前确认先yum search xx看看有没有需要的版本工具，没有的话还要添加扩展源
 http://blog.csdn.net/haitun312366/article/details/8511412
