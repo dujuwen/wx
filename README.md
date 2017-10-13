@@ -65,9 +65,9 @@ grep -i意思是不区分大小写
 ```
 出现"mysql>"提示符后进入MySQL命令行环境，输入：
 > use mysql;
-mysql> update user set password = Password(’123456’) where User = 'root';
+mysql> update user set password = Password('123456') where User = 'root';
 回车后执行(刷新MySQL系统权限相关的表)：
-mysql> grant all privileges on *.* to admin@localhost identified by '123456’;
+mysql> grant all privileges on *.* to admin@localhost identified by '123456';
 mysql> flush privileges;
 mysql> select user();
 mysql> select current_user;
