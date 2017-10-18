@@ -32,3 +32,12 @@ $config['db']['database'] = 'wesambofx';-->你的数据库名称
 管理地址：http://域名
 默认账号密码都是admin  admin123
 ===================================================================
+
+5.wx2/web/common/template.func.php 57行
+if (! file_exists($to)) {
+	    umask(011);
+	    file_put_contents($to, '');
+	}
+
+web根目录下的目录权限设置大点
+/data/tpl/web/default
