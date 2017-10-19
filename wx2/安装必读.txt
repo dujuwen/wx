@@ -33,11 +33,17 @@ $config['db']['database'] = 'wesambofx';-->你的数据库名称
 默认账号密码都是admin  admin123
 ===================================================================
 
-5.wx2/web/common/template.func.php 57行
-if (! file_exists($to)) {
-	    umask(011);
-	    file_put_contents($to, '');
-	}
-
-web根目录下的目录权限设置大点
+5.web根目录下的目录权限设置大点
 /data/tpl/web/default
+
+if (! file_exists($to)) {
+    umask(011);
+    file_put_contents($to, '');
+}
+
+addons/ewei_shopv2/core/inc/functions.php 550行
+app/common/template.func.php 123行
+web/common/template.func.php 57行
+
+addons/ewei_shopv2/plugin/commission/core/web/cover.php 19行注释
+// 	    $qrcode = m('qrcode')->createQrcode($url);
